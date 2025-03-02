@@ -74,11 +74,11 @@ createUserWithEmailAndPassword(auth, email, password)
   })
   .catch((error) => {
     if (error.code === "auth/email-already-in-use") {
-        if (confirm("⚠️ This email is already registered. Do you want to log in instead?")) {
+        if (confirm(" This email is already registered. Do you want to log in instead?")) {
             window.location.href = "index.html";  // Redirect to login page
         }
     } else {
-        messageBox.innerText = "⚠️ " + error.message;
+        messageBox.innerText = "" + error.message;
     }
 });
            

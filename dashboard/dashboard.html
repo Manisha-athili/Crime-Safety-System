@@ -16,14 +16,38 @@
     <button onclick="logout()">Logout</button>
 
     <script>
-        const auth = firebase.auth();
+        // Import Firebase functions
+import { initializeApp } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-app.js";
+import { getAuth, signOut } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-auth.js";
 
-        function logout() {
-            auth.signOut().then(() => {
-                window.location.href = "/index.html";
-            });
-            
-        }
+// Firebase configuration
+const firebaseConfig = {
+    apiKey: "AIzaSyBsJS-phFoPIzSEtjdr0Y9lZ-J79XpKjV8",
+    authDomain: "crime-and-safety.firebaseapp.com",
+    projectId: "crime-and-safety",
+    storageBucket: "crime-and-safety.appspot.com",
+    messagingSenderId: "167045576983",
+    appId: "1:167045576983:web:4b19f62d9f0268af565f52",
+    measurementId: "G-QRL88H2M6Q"
+};
+
+// ✅ Initialize Firebase **before** using auth
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+
+// Logout function
+function logout() {
+    signOut(auth).then(() => {
+        alert("Logged out successfully");
+        window.location.href = "index.html"; // Redirect to login page
+    }).catch((error) => {
+        console.error("Logout failed: ", error.message);
+    });
+}
+
+// Attach event listener **after defining the function**
+document.getElementById('logoutBtn').addEventListener('click', logout);
+
     </script>
 </body>
 </html>
