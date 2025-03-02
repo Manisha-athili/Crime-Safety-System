@@ -61,15 +61,15 @@ signInWithEmailAndPassword(auth, email, password)
     // Signed in 
     const user = userCredential.user;
     alert("Logged in successfully!");
-    window.location.href = "./dashboard/dashboard.html";
+    window.location.href ="/crime-safety/dashboard/dashboard.html";
   })
   .catch((error) => {
     if (error.code === "auth/user-not-found") {
-          messageBox.innerText = "⚠️ No account found. Please sign up.";
+          messageBox.innerText = "No account found. Please sign up.";
       } else if (error.code === "auth/wrong-password") {
-          messageBox.innerText = "⚠️ Incorrect password. Try again.";
+          messageBox.innerText = "Incorrect password. Try again.";
       } else {
-          messageBox.innerText = "⚠️ " + error.message;
+          messageBox.innerText = error.message;
       }
   });
      }

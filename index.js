@@ -70,12 +70,12 @@ createUserWithEmailAndPassword(auth, email, password)
     alert("Registration Successful! Your UID: " + userId);
     localStorage.setItem(userId)
     alert("Registration Successful!");
-    window.location.href = "./dashboard/dashboard.html";
+    window.location.href = "/crime-safety/dashboard/dashboard.html";
   })
   .catch((error) => {
     if (error.code === "auth/email-already-in-use") {
         if (confirm(" This email is already registered. Do you want to log in instead?")) {
-            window.location.href = "index.html";  // Redirect to login page
+            window.location.href = "/index.html";  // Redirect to login page
         }
     } else {
         messageBox.innerText = "" + error.message;
@@ -89,7 +89,7 @@ function guestLogin() {
     signInAnonymously(auth)
         .then(() => {
             alert("Logged in as Guest");
-             window.location.href = "./dashboard/dashboard.html"; // Redirect guest
+             window.location.href = "/crime-safety/dashboard/dashboard.html"; // Redirect guest
         })
         .catch((error) => {
             document.getElementById("message").innerText = error.message;

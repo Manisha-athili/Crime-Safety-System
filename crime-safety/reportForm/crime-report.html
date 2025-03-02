@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Report</title>
+</head>
+<body>
+    <h2>Report a Crime</h2>
+<form id="crimeForm">
+    <input type="text" id="crimeType" placeholder="Crime Type (e.g., Theft, Assault)" required>
+    <textarea id="crimeDescription" placeholder="Crime Description" required></textarea>
+    <button type="button" id="getLocation">Get Location</button>
+    <p id="locationDisplay">Location: Not Set</p>
+    <input type="hidden" id="latitude">
+    <input type="hidden" id="longitude">
+    <button type="submit">Submit Report</button>
+</form>
+
+<h2>All Crime Reports</h2>
+<ul id="crimeList"></ul>
+
+<script type="module" src="cirme-report.js"></script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAKpG0cWEbf1ZwlAohgl82eNMTMlMgRhPk&callback=initMap" async defer></script>
+<div id="map" style="height: 400px;"></div>
+</body>
+</html>

@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+
+    
+
+
+</head>
+<body>
+    <h2>Welcome to the Crime & Safety System</h2>
+    <button id="logoutBtn">Logout</button>
+    <button id="crimeReport">Crime Report</button>
+<!-- <a href=""></a> -->
+    <script type="module">
+        // fireBase 
+// Import the functions you need from the SDKs you need
+import { initializeApp } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-app.js";
+
+import { createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-auth.js";
+
+import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-auth.js";
+
+import { getFirestore, setDoc, doc } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-firestore.js";
+
+const firebaseConfig = {
+    apiKey: "AIzaSyBsJS-phFoPIzSEtjdr0Y9lZ-J79XpKjV8",
+    authDomain: "crime-and-safety.firebaseapp.com",
+    projectId: "crime-and-safety",
+    storageBucket: "crime-and-safety.appspot.com",
+    messagingSenderId: "167045576983",
+    appId: "1:167045576983:web:4b19f62d9f0268af565f52",
+    measurementId: "G-QRL88H2M6Q"
+  };
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    // const analytics = getAnalytics(app);
+    const auth = getAuth(app);
+
+        // Logout function
+        function logout() {
+            auth.signOut().then(() => {
+                alert("Logged out successfully");
+                window.location.href = "/index.html"; // Redirect to login page
+            }).catch((error) => {
+                console.error("Logout failed: ", error.message);
+            });
+        }
+
+        function report(){
+            window.location.href="/crime-safety/reportForm/crime-report.html"
+        }
+
+        // Attach event listener correctly
+        document.getElementById('logoutBtn').addEventListener('click', logout);
+
+        document.getElementById('crimeReport').addEventListener('click', report);
+    </script>
+</body>
+</html>
