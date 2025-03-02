@@ -39,7 +39,7 @@ function isValidEmail(email) {
 
 // 🔹 Sign Up / Registration Function
 function signIn(){
-    alert("hello");
+    // alert("hello");
     var email = document.getElementById('email').value;
     var password = document.getElementById('password').value;
     let messageBox = document.getElementById("message");
