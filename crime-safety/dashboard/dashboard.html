@@ -10,11 +10,12 @@
 
 </head>
 <body>
+    <!-- <a href=></a> -->
     <h2>Welcome to the Crime & Safety System</h2>
     <button id="logoutBtn">Logout</button>
     <button id="crimeReport">Crime Report</button>
-<!-- <a href=""></a> -->
-    <script type="module">
+<script type="module">
+
         // fireBase 
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-app.js";
@@ -50,7 +51,9 @@ const firebaseConfig = {
         }
 
         function report(){
-            window.location.href="crime-safety/reportForm/crime-report.html"
+            alert("report")
+            window.location.href = "/crime-safety/reportForm/crime-report.html";
+
         }
 
         // Attach event listener correctly
