@@ -1,212 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Crime Reporting System</title>
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
-        import { getFirestore, collection, addDoc, getDocs, updateDoc, doc, orderBy, query, serverTimestamp, where } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
-        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
-
-        // Firebase configuration
-        const firebaseConfig = {
-            apiKey: "AIzaSyBsJS-phFoPIzSEtjdr0Y9lZ-J79XpKjV8",
-            authDomain: "crime-and-safety.firebaseapp.com",
-            projectId: "crime-and-safety",
-            storageBucket: "crime-and-safety.appspot.com",
-            messagingSenderId: "167045576983",
-            appId: "1:167045576983:web:4b19f62d9f0268af565f52"
-        };
-
-        // Initialize Firebase
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
-        const auth = getAuth(app);
-        let currentUser = null;
-
-        // Check user authentication state
-        onAuthStateChanged(auth, (user) => {
-            if (user) {
-                currentUser = user;
-                console.log("User logged in:", user.uid);
-            } else {
-                console.log("No user logged in.");
-                currentUser = null;
-            }
-            loadReports();
-        });
-
-        // Handle form submission
-        document.getElementById("crimeForm").addEventListener("submit", async function(event) {
-            event.preventDefault();
-
-            if (!currentUser) {
-                alert("You need to log in to report a crime.");
-                return;
-            }
-
-            const crimeType = document.getElementById("crimeType").value;
-            const description = document.getElementById("description").value;
-            const location = document.getElementById("location").value;
-            const datetime = document.getElementById("datetime").value;
-
-            try {
-                await addDoc(collection(db, "crimeReports"), {
-                    crimeType,
-                    description,
-                    location,
-                    datetime,
-                    userId: currentUser.uid, // Store the user ID
-                    timestamp: serverTimestamp()
-                });
-
-                document.getElementById("crimeForm").reset();
-                loadReports();
-            } catch (error) {
-                console.error("Error adding report: ", error);
-            }
-        });
-
-        // Fetch and display reports
-        async function loadReports() {
-            const myReportsContainer = document.getElementById("myReportsContainer");
-            const otherReportsContainer = document.getElementById("otherReportsContainer");
-
-            myReportsContainer.innerHTML = "<h3>My Reports</h3>";
-            otherReportsContainer.innerHTML = "<h3>Other Users' Reports</h3>";
-
-            const q = query(collection(db, "crimeReports"), orderBy("timestamp", "desc"));
-            const snapshot = await getDocs(q);
-
-            snapshot.forEach(docSnap => {
-                const data = docSnap.data();
-                const reportCard = document.createElement("div");
-                reportCard.className = "card";
-                reportCard.innerHTML = `
-                    <h3>${data.crimeType}</h3>
-                    <p><strong>Description:</strong> <span id="desc-${docSnap.id}">${data.description}</span></p>
-                    <p><strong>Location:</strong> <span id="loc-${docSnap.id}">${data.location}</span></p>
-                    <p><strong>Date & Time:</strong> ${data.datetime}</p>
-                `;
-
-                if (currentUser && currentUser.uid === data.userId) {
-                    const editBtn = document.createElement("button");
-                    editBtn.textContent = "Edit";
-                    editBtn.className = "edit-btn";
-                    editBtn.onclick = () => editReport(docSnap.id, data.description, data.location);
-                    reportCard.appendChild(editBtn);
-                    myReportsContainer.appendChild(reportCard);
-                } else {
-                    otherReportsContainer.appendChild(reportCard);
-                }
-            });
-        }
-
-        // Edit report function
-        async function editReport(reportId, currentDesc, currentLoc) {
-            const newDesc = prompt("Edit description:", currentDesc);
-            const newLoc = prompt("Edit location:", currentLoc);
-
-            if (newDesc !== null && newLoc !== null) {
-                try {
-                    await updateDoc(doc(db, "crimeReports", reportId), {
-                        description: newDesc,
-                        location: newLoc
-                    });
-
-                    document.getElementById(`desc-${reportId}`).textContent = newDesc;
-                    document.getElementById(`loc-${reportId}`).textContent = newLoc;
-                    alert("Report updated successfully.");
-                } catch (error) {
-                    console.error("Error updating report: ", error);
-                }
-            }
-        }
-    </script>
-
-    <style>
-        body {
-            font-family: 'Arial', sans-serif;
-            margin: 20px;
-            background-color: #f4f4f9;
-            color: #333;
-        }
-
-        h2, h3 {
-            text-align: center;
-            color: #007BFF;
-        }
-
-        form {
-            max-width: 400px;
-            margin: 20px auto;
-            padding: 20px;
-            background: white;
-            border-radius: 8px;
-            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-        }
-
-        label {
-            font-weight: bold;
-        }
-
-        input, textarea, select {
-            width: 100%;
-            margin: 8px 0;
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            font-size: 16px;
-        }
-
-        button {
-            width: 100%;
-            padding: 12px;
-            background: #007BFF;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            font-size: 16px;
-            cursor: pointer;
-            transition: 0.3s;
-        }
-
-        button:hover {
-            background: #0056b3;
-        }
-
-        #myReportsContainer, #otherReportsContainer {
-            max-width: 600px;
-            margin: 20px auto;
-        }
-
-        .card {
-            background: white;
-            border-radius: 8px;
-            padding: 15px;
-            margin: 10px 0;
-            box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.1);
-        }
-
-        .edit-btn {
-            background-color: #28a745;
-            padding: 8px 12px;
-            font-size: 14px;
-            margin-top: 10px;
-            border: none;
-            cursor: pointer;
-            color: white;
-            border-radius: 5px;
-            width: 100%;
-        }
-
-        .edit-btn:hover {
-            background-color: #218838;
-        }
-    </style>
-
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="report.css">
 </head>
+
 <body>
 
     <h2>Report a Crime</h2>
@@ -222,6 +24,10 @@
 
         <label for="description">Description:</label>
         <textarea id="description" rows="3" required></textarea>
+        
+        <label for="crimeImage">Upload Image:</label>
+        <input type="file" id="crimeImage" accept="image/*">
+        <img id="previewImage" style="max-width: 200px; display: none;">
 
         <label for="location">Location:</label>
         <input type="text" id="location" required>
@@ -234,6 +40,6 @@
 
     <div id="myReportsContainer"></div>
     <div id="otherReportsContainer"></div>
-
 </body>
+<script type="module" src="report.js"></script>
 </html>

@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Crime & Safety - Register</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background: linear-gradient(to right, #93f6ff, #feb47b);
+    color: #333;
+    text-align: center;
+    padding: 50px;
+  }
+
+  .container {
+    background: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    display: inline-block;
+    transition: transform 0.3s ease-in-out;
+  }
+
+  .container:hover {
+    transform: scale(1.05);
+  }
+
+  input[type="email"], input[type="password"] {
+    width: 80%;
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    transition: border-color 0.3s ease-in-out;
+  }
+
+  input[type="email"]:hover, input[type="password"]:hover {
+    border-color: #ff7e5f;
+  }
+
+  button {
+    background: #ff7e5f;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s ease-in-out, transform 0.3s ease-in-out;
+  }
+
+  button:hover {
+    background: #feb47b;
+    transform: scale(1.1);
+  }
+
+  a {
+    color: #ff7e5f;
+    text-decoration: none;
+    transition: color 0.3s ease-in-out;
+  }
+
+  a:hover {
+    color: #feb47b;
+  }
+
+  @media (max-width: 600px) {
+    body {
+      padding: 20px;
+    }
+
+    .container {
+      width: 100%;
+      padding: 10px;
+    }
+
+    input[type="email"], input[type="password"] {
+      width: 100%;
+    }
+  }
+</style>
+<body>
+
+
+  <h1>Sign Up</h1>
+  <div class="container">
+    <input type="email" name="" id="email" placeholder="Email">
+    <input type="password" name="" id="password" placeholder="password">
+<br>
+    <button type="submit" id="signin1">Sign Up</button> 
+    
+    <p>Already have an Acount? <a href="../loginIn/login.html">Login here</a></p>
+    <br>
+    <button type="submit" id="guestLogin">Guest Login</button>
+    <p id="message"></p>
+  </div>
+  <script src="signUp.js" type="module"></script> 
+
+</body>
+</html>

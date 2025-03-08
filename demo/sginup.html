@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Futuristic Neon Sign-Up</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        :root {
+            --primary-color: #0ff;
+            --secondary-color: cyan;
+            --font-size-large: 36px;
+            --font-size-medium: 18px;
+            --font-size-small: 14px;
+        }
+       
+        h2 {
+            font-size: 36px;
+            padding-bottom: 40px;
+        }
+        ::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+            transition: color 0.3s;
+        }
+        
+        input:hover::placeholder {
+            color: var(--primary-color);
+        }
+        .login-container:hover {
+            box-shadow: 0 0 25px var(--primary-color);
+        }
+
+        .input-box input:hover {
+            border-bottom: 2px solid var(--primary-color);
+        }
+
+        .login-btn:hover {
+            background: linear-gradient(45deg, var(--primary-color), cyan);
+        }
+        
+        h2 {
+            animation: neon-glow 1.5s infinite alternate;
+        }
+       
+    
+        
+
+        @media (max-width: 768px) {
+            .login-container {
+                padding: 50px;
+            }
+            .input-box input {
+                font-size: 16px;
+            }
+            .login-btn {
+                font-size: 16px;
+                padding: 8px 16px;
+            }
+            .links {
+                font-size: 14px;
+            }
+        }
+        body {
+            background-color: #010101;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            font-family: 'Orbitron', sans-serif;
+        }
+        .login-container {
+            position: relative;
+            padding: 100px;
+            border-radius: 10px;
+            background: rgba(0, 0, 0, 0.8);
+            box-shadow: 0 0 15px rgba(0, 255, 255, 0.5);
+            text-align: center;
+        }
+        .login-container h2 {
+            color: #0ff;
+            text-shadow: 0 0 10px cyan;
+        }
+        .input-box {
+            position: relative;
+            margin: 15px 0;
+        }
+        .input-box input {
+            width: 100%;
+            padding: 10px;
+            background: transparent;
+            border: none;
+            border-bottom: 2px solid cyan;
+            color: white;
+            outline: none;
+            font-size: 18px;
+            transition: 0.3s;
+            color: var(--primary-color); /* Added text color */
+        }
+        .input-box input:focus {
+            border-bottom: 2px solid var(--primary-color);
+        }
+        .login-btn, .guest-btn {
+            background: linear-gradient(45deg, cyan, var(--primary-color));
+            border: none;
+            padding: 10px 20px;
+            font-size: 18px;
+            color: white;
+            cursor: pointer;
+            transition: 0.3s;
+            box-shadow: 0 0 10px cyan;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+        .login-btn:hover, .guest-btn:hover {
+            box-shadow: 0 0 20px var(--primary-color);
+        }
+        .login-btn:active, .guest-btn:active {
+            transform: scale(0.95);
+            transition: trans form 0.1s;
+        }
+        .links {
+            margin-top: 20px;
+        }
+        .links a {
+            text-decoration: none;
+            transition: 0.3s;
+            font-size: 14px;
+            /* color: cyan; */
+            color: goldenrod;
+        }
+        .links a:hover {
+            color: rgb(224, 73, 73);
+        }
+        /* span {
+            cursor: pointer;
+            transition: 0.3s;
+        } */
+        #acc{
+            color: var(--primary-color);
+        }
+        @media (max-width: 480px) {
+            .login-container {
+                padding: 30px;
+            }
+            .input-box input {
+                font-size: 14px;
+            }
+            .login-btn, .guest-btn {
+                font-size: 14px;
+                padding: 8px 12px;
+            }
+            h2 {
+                font-size: 28px;
+            }
+            .links {
+                font-size: 12px;
+            }
+        }
+
+        @media (min-width: 769px) and (max-width: 1024px) {
+            .login-container {
+                padding: 70px;
+            }
+            .input-box input {
+                font-size: 18px;
+            }
+            .login-btn, .guest-btn {
+                font-size: 18px;
+                padding: 10px 20px;
+            }
+            h2 {
+                font-size: 32px;
+            }
+            .links {
+                font-size: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <h2>Sign Up</h2>
+        <div class="input-box">
+            <input type="text" placeholder="Username">
+        </div>
+        <div class="input-box">
+            <input type="email" placeholder="Email">
+        </div>
+        <div class="input-box">
+            <input type="password" placeholder="Password">
+        </div>
+        <button class="login-btn">SIGN UP</button>
+        <div class="links">
+            <p id="acc">Already have an account?<a href="practice.html"> Login</a></p>
+            <p><a href="../crime-safety/dashboard/dashboard.html">Continue as Guest</a></p>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,5 +1,6 @@
 {
-    "crimes": {
-        "name": "keyword"
-    }
-}
+    "uid": "USER_UID_HERE",
+    "email": "user@example.com",
+    "role": "officer"
+  }
+  

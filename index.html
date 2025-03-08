@@ -1,28 +1,116 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Crime & Safety - Register</title>
-  <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            background-color: #010101;
+            font-family: 'Orbitron', sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            text-align: center;
+            color: cyan;
+        }
+        .dashboard-container {
+            background: rgba(0, 0, 0, 0.8);
+            padding: 50px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px cyan;
+        }
+        h2 {
+            text-shadow: 0 0 10px cyan;
+        }
+        .btn {
+            background: linear-gradient(45deg, cyan, rgb(73, 194, 224));
+            border: none;
+            padding: 12px 24px;
+            font-size: 18px;
+            color: white;
+            cursor: pointer;
+            transition: 0.3s;
+            box-shadow: 0 0 10px cyan;
+            border-radius: 10px;
+            margin: 15px;
+        }
+        .btn:hover {
+            box-shadow: 0 0 20px rgb(73, 194, 224);
+        }
+        .btn:active {
+            transform: scale(0.95);
+        }
+        @media (max-width: 768px) {
+            .dashboard-container {
+                padding: 30px;
+                width: 90%;
+            }
+            .btn {
+                font-size: 16px;
+                padding: 10px 20px;
+            }
+        }
+        @media (max-width: 480px) {
+            h2 {
+                font-size: 24px;
+            }
+            .btn {
+                font-size: 14px;
+                padding: 8px 16px;
+            }
+        }
+    </style>
 </head>
 <body>
+    <div class="dashboard-container">
+        <h2>Welcome to the Crime & Safety System</h2>
+        <button id="logoutBtn" class="btn">Logout</button>
+        <button id="crimeReport" class="btn">Crime Report</button>
+        <button class="btn" onclick="window.location.href='/crime-safety/all_Reports/allReports.html'">View All Reports</button>
 
-  <h1>Sign Up</h1>
-  <div class="container">
-
-    <input type="text" placeholder="Name">
-    <input type="email" name="" id="email" placeholder="Email">
-    <input type="password" name="" id="password" placeholder="password">
-<br>
-    <button type="submit" id="signin1">Sign Up</button>
+    </div>
     
-    <p>Already have an Acount? <a href="login.html">Login here</a></p>
-    <br>
-    <button type="submit" id="guestLogin">Guest Login</button>
-    <p id="message"></p>
-  </div>
-  <script src="index.js" type="module"></script> 
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-app.js";
+        import { getAuth } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-auth.js";
 
+        const firebaseConfig = {
+            apiKey: "AIzaSyBsJS-phFoPIzSEtjdr0Y9lZ-J79XpKjV8",
+            authDomain: "crime-and-safety.firebaseapp.com",
+            projectId: "crime-and-safety",
+            storageBucket: "crime-and-safety.appspot.com",
+            messagingSenderId: "167045576983",
+            appId: "1:167045576983:web:4b19f62d9f0268af565f52",
+            measurementId: "G-QRL88H2M6Q"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+
+        function logout() {
+            auth.signOut().then(() => {
+                alert("Logged out successfully");
+                window.location.href = "/index.html";
+            }).catch(error => {
+                console.error("Logout failed: ", error.message);
+            });
+        }
+
+        function report() {
+            window.location.href = "/crime-safety/reportForm/crime-report.html";
+        }
+
+        document.getElementById('logoutBtn').addEventListener('click', logout);
+        document.getElementById('crimeReport').addEventListener('click', report);
+    </script>
 </body>
 </html>

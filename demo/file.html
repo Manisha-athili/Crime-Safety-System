@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <form id="reportForm">
+        <input type="text" id="crimeType" placeholder="Crime Type" required>
+        <textarea id="description" placeholder="Describe the crime" required></textarea>
+        
+        <input type="file" id="crimeImage" accept="image/*">
+        <img id="previewImage" style="max-width: 200px; display: none;"> <!-- Preview Image -->
+        
+        <button type="submit">Submit Report</button>
+    </form>
+    
+    <p id="message" style="color: red;"></p>
+    <h2>Crime Reports</h2>
+<div id="reportsContainer"></div>
+
+    
+    <script>
+     import { getFirestore, collection, addDoc, getDocs } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-firestore.js";
+
+
+
+const reportForm = document.getElementById("reportForm");
+const imageInput = document.getElementById("crimeImage");
+const previewImage = document.getElementById("previewImage");
+let base64Image = ""; // To store the image in Base64 format
+
+// 🔹 Convert Image to Base64 when user selects a file
+imageInput.addEventListener("change", function () {
+    const file = imageInput.files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = function () {
+            base64Image = reader.result; // Store Base64 image
+            previewImage.src = base64Image;
+            previewImage.style.display = "block"; // Show preview
+        };
+    }
+});
+
+// 🔹 Submit Report Function
+reportForm.addEventListener("submit", async function (e) {
+    e.preventDefault();
+
+    const crimeType = document.getElementById("crimeType").value;
+    const description = document.getElementById("description").value;
+    const userId = localStorage.getItem("userId"); // Get logged-in user ID
+    const db = getFirestore();
+    try {
+        await addDoc(collection(db, "crimeReports"), {
+            crimeType: crimeType,
+            description: description,
+            userId: userId,
+            image: base64Image, // Store Base64 image
+            createdAt: new Date().toISOString()
+        });
+
+        alert("Report submitted successfully!");
+        reportForm.reset();
+        previewImage.style.display = "none"; // Hide preview after submission
+    } catch (error) {
+        document.getElementById("message").innerText = "Error submitting report: " + error.message;
+    }
+});
+
+const reportImage = document.createElement("img");
+reportImage.src = report.image; // Base64 image from Firestore
+reportImage.style.maxWidth = "200px";
+// document.body.appendChild(reportImage); // Append image to the page
+
+import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-firestore.js";
+
+const db = getFirestore();
+const reportsContainer = document.getElementById("reportsContainer"); // Make sure this div exists in HTML
+
+// 🔹 Fetch and Display Reports
+async function fetchReports() {
+    reportsContainer.innerHTML = ""; // Clear existing reports
+    const querySnapshot = await getDocs(collection(db, "crimeReports"));
+
+    querySnapshot.forEach((doc) => {
+        const report = doc.data();
+        
+        // Create report card
+        const reportCard = document.createElement("div");
+        reportCard.classList.add("report-card");
+
+        reportCard.innerHTML = `
+            <h3>${report.crimeType}</h3>
+            <p>${report.description}</p>
+            <p><strong>Reported By:</strong> ${report.userId}</p>
+            <p><strong>Date:</strong> ${new Date(report.createdAt).toLocaleString()}</p>
+        `;
+
+        // 🔹 Display Image if Available
+        if (report.image) {
+            const reportImage = document.createElement("img");
+            reportImage.src = report.image; // Base64 image
+            reportImage.style.maxWidth = "200px"; // Limit size
+            reportImage.style.display = "block";
+            reportImage.style.marginTop = "10px";
+            reportCard.appendChild(reportImage);
+        }
+
+        reportsContainer.appendChild(reportCard);
+    });
+}
+
+// 🔹 Fetch Reports on Page Load
+fetchReports();
+
+
+
+    </script>
+</body>
+</html>
