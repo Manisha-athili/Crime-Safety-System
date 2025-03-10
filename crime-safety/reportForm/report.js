@@ -65,7 +65,7 @@ imageInput.addEventListener("change", function () {
     }
 });
 
-// Handle Crime Report Submission
+// Handle Crime Report Submission with Location
 document.getElementById("crimeForm").addEventListener("submit", async function (event) {
     event.preventDefault();
 
@@ -75,6 +75,7 @@ document.getElementById("crimeForm").addEventListener("submit", async function (
         return;
     }
 
+  
     const crimeType = document.getElementById("crimeType").value;
     const description = document.getElementById("description").value;
     const location = document.getElementById("location").value;
@@ -83,6 +84,22 @@ document.getElementById("crimeForm").addEventListener("submit", async function (
     const status = "pending";
 
     alert(status);
+
+    navigator.geolocation.getCurrentPosition(
+        async (position) => {
+            const lat = position.coords.latitude;
+            const lng = position.coords.longitude;
+            console.log("Location retrieved:", lat, lng); // Debugging log
+        },
+        (error) => {
+            console.error("Error getting location:", error);
+            alert("Location access denied or unavailable. Please enable location services.");
+        },
+        { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 } // Add options for better accuracy
+    );
+    
+
+
 
     try {
         // Add report to Firestore
@@ -95,8 +112,9 @@ document.getElementById("crimeForm").addEventListener("submit", async function (
             // userId,
             userId: currentUser.uid, // Store the user ID
             timestamp: serverTimestamp(),
-            image: base64Image
-            // image
+            image: base64Image,// image
+            latitude: lat,   // ✅ Store Latitude
+            longitude: lng   // ✅ Store Longitude
         });
 
         // Reset form and hide preview
@@ -109,8 +127,11 @@ document.getElementById("crimeForm").addEventListener("submit", async function (
     
     } catch (error) {
         console.error("Error adding report:", error);
+        console.error("Error getting location:", error);
+        alert("Location access denied. Please enable location services to report crimes.");
     }
-});
+    });
+
 
 // Fetch and display reports
 async function loadReports() {
@@ -150,6 +171,8 @@ function createReportCard(doc, container, allowEdit) {
         <p><strong>Description:</strong> ${data.description}</p>
         <p><strong>Location:</strong> ${data.location}</p>
         <p><strong>Date & Time:</strong> ${data.datetime}</p>
+        <p><strong>Latitude:</strong> ${data.latitude}</p>
+        <p><strong>Longitude:</strong> ${data.longitude}</p>
         <p><strong>Status:</strong> <span id="status-${doc.id}">${data.status}</span></p>
         ${imageHTML}
         ${allowEdit ? `

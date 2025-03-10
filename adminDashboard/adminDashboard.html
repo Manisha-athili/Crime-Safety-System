@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <script defer src="adminDashboard.js"></script>
+</head>
+<body>
+    <h1>Admin Dashboard</h1>
+    
+    <button onclick="logout()">Logout</button>
+
+    <h2>Manage Users</h2>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Email</th>
+                <th>Role</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody id="userTable"></tbody>
+    </table>
+
+    <h2>All Crime Reports</h2>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Report ID</th>
+                <th>Description</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody id="reportTable"></tbody>
+    </table>
+</body>
+<script type="module" src="adminDashboard.js"></script>
+</html>

@@ -1,6 +1,6 @@
 {
-    "uid": "USER_UID_HERE",
-    "email": "user@example.com",
-    "role": "officer"
-  }
-  
+  "description": "Robbery near ABC Road",
+  "latitude": 28.7041,
+  "longitude": 77.1025,
+  "timestamp": "2024-03-09T12:00:00Z"
+}

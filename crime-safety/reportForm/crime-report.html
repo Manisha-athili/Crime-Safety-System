@@ -34,12 +34,21 @@
 
         <label for="datetime">Date & Time:</label>
         <input type="datetime-local" id="datetime" required>
+        <button id="get-location-btn">Get My Location</button>
 
-        <button type="submit">Submit Report</button>
+        <button type="submit" id="report-btn">Submit Report</button>
     </form>
 
     <div id="myReportsContainer"></div>
     <div id="otherReportsContainer"></div>
+
+    <!-- Firebase SDK for getting location -->
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js"></script>
+    <script src="firebase-config.js"></script> 
+
+    <!-- Crime Reporting Script -->
+    <script type="module" src="report.js"></script>
 </body>
-<script type="module" src="report.js"></script>
+
 </html>

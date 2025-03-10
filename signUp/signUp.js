@@ -67,17 +67,20 @@ async function signIn() {
         const user = userCredential.user;
         const userId = user.uid;
 
+           // Assign default role
+           const role = "user"; // Default role
+
             // Store User ID & Info in Firestore with a role
             await setDoc(doc(db, "users", userId), {
                 email: email,
                 uid: userId,
-                role: "user", // Default role for new users
+                role: role, 
                 createdAt: new Date().toISOString()
             });
 
             // Store User ID and Role in Local Storage
             localStorage.setItem("userId", userId);
-            localStorage.setItem("userRole", "user");
+            localStorage.setItem("userRole", role);
 
             
         messageBox.innerText = "✅ Registration Successful! Redirecting...";
