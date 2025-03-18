@@ -48,7 +48,7 @@ function logout() {
 function report() {
     onAuthStateChanged(auth, (user) => {
         if (user) {
-            window.location.href = "crime-safety/reportForm/crime-report.html"; // Ensure correct path
+            window.location.href = "crime-safety/reportForm/crime-report.html"; 
         } else {
             alert("Please log in to report a crime.");
             window.location.href = "loginIn/login.html"; // Redirect to login
