@@ -48,7 +48,7 @@ function logout() {
 function report() {
     onAuthStateChanged(auth, (user) => {
         if (user) {
-            window.location.href = "/crime-safety/reportForm/crime-report.html"; // Ensure correct path
+            window.location.href = "crime-safety/reportForm/crime-report.html"; // Ensure correct path
         } else {
             alert("Please log in to report a crime.");
             window.location.href = "loginIn/login.html"; // Redirect to login
@@ -61,26 +61,6 @@ document.addEventListener("DOMContentLoaded", function () {
     document.getElementById("logoutBtn")?.addEventListener("click", logout);
     document.getElementById("crimeReport")?.addEventListener("click", report);
 });
-
-// 🔹 Redirect Users Based on Role
-// onAuthStateChanged(auth, async (user) => {
-//     if (user) {
-//         const role = await getUserRole(user);
-//         localStorage.setItem("userRole", role); // Store securely
-
-//         // 🚀 Redirect based on user role 
-//         if (role === "admin") {
-//             window.location.href = "adminDashboard.html"; // Redirect Admins
-//         } else if (role === "officer") {
-//             window.location.href = "officerDashboard.html"; // Redirect Officers
-//         } else {
-//             window.location.href = "index.html"; // Redirect Normal Users
-//             // console.log("index c")
-//         }
-//     } else {
-//         console.warn("No user logged in");
-//     }
-// });
 
 // 🔹 Redirect Users Based on Role
 onAuthStateChanged(auth, async (user) => {
