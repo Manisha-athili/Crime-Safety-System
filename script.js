@@ -17,7 +17,7 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
 
-// 🚀 Securely fetch user role from Firestore
+// 🚀 Get User Role Securely from Firestore
 async function getUserRole(user) {
     if (!user) return null;
 
@@ -36,7 +36,7 @@ function logout() {
             .then(() => {
                 alert("Logged out successfully");
                 localStorage.removeItem("userRole"); // Clear role cache
-                window.location.href = "login.html"; // Redirect to login page
+                window.location.href = "loginIn/login.html"; // Redirect to login page
             })
             .catch(error => {
                 console.error("Logout failed: ", error.message);
@@ -48,10 +48,10 @@ function logout() {
 function report() {
     onAuthStateChanged(auth, (user) => {
         if (user) {
-            window.location.href = "/reportForm/crime-report.html"; // Ensure correct path
+            window.location.href = "reportForm/crime-report.html"; // Ensure correct path
         } else {
             alert("Please log in to report a crime.");
-            window.location.href = "login.html"; // Redirect to login
+            window.location.href = "loginIn/login.html"; // Redirect to login
         }
     });
 }
@@ -62,21 +62,19 @@ document.addEventListener("DOMContentLoaded", function () {
     document.getElementById("crimeReport")?.addEventListener("click", report);
 });
 
-// 🔹 Role-Based Access Control (Secure Fetch from Firestore)
+// 🔹 Redirect Users Based on Role
 onAuthStateChanged(auth, async (user) => {
     if (user) {
         const role = await getUserRole(user);
         localStorage.setItem("userRole", role); // Store securely
 
-        // Show dashboards based on role
+        // 🚀 Redirect based on user role 
         if (role === "admin") {
-            document.getElementById("user-dashboard").style.display = "none";
-            document.getElementById("admin-dashboard").style.display = "block";
+            window.location.href = "adminDashboard.html"; // Redirect Admins
         } else if (role === "officer") {
-            document.getElementById("user-dashboard").style.display = "none";
-            document.getElementById("officer-dashboard").style.display = "block";
+            window.location.href = "officerDashboard.html"; // Redirect Officers
         } else {
-            document.getElementById("user-dashboard").style.display = "block";
+            window.location.href = "userDashboard.html"; // Redirect Normal Users
         }
     } else {
         console.warn("No user logged in");
