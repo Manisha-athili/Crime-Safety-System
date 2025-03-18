@@ -60,7 +60,7 @@ async function loginUser() {
             } else if (role === "officer") {
                 window.location.href = "../officerDasboard/officerDashboard.html";
             } else if (role === "user") {
-                window.location.href = "/index.html";
+                window.location.href = "../index.html";
                 console.log("hello")
             }
         }, 1500);
