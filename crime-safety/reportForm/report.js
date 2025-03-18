@@ -77,6 +77,7 @@ function getLocation(event) {
     if (navigator.geolocation) {
             (position) => {
                 console.log(position.coords)
+                alert(position.coords.latitude + "accessed")
                 latitude = position.coords.latitude || "null";  
                 longitude = position.coords.longitude || "null";
             },
