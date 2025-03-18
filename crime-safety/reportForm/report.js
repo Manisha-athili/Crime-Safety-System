@@ -66,9 +66,10 @@ imageInput.addEventListener("change", function () {
 });
 
 // ✅ Step 5: Get User Location (Latitude & Longitude)
-let latitude = "null";
-let longitude = "null";
+// let latitude = "null";
+// let longitude = "null";
 const locationButton = document.getElementById("getLocation");
+// const location = document.getElementById("location");
 
 locationButton.addEventListener("click", getLocation);
 
@@ -76,32 +77,36 @@ function getLocation() {
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(showPosition, showError);
         alert("clicked location")
+        document.getElementById("locationis").innerHTML ="Geolocation accessed"
     } else {
-        document.getElementById("location").innerHTML = "Geolocation is not supported by this browser.";
+        document.getElementById("locationis").innerHTML = "Geolocation is not supported by this browser.";
     }
 }
 
+let lat = null;
+let lon = null;
+
 function showPosition(position) {
-    let lat = position.coords.latitude;
-    let lon = position.coords.longitude;
-    document.getElementById("location").innerHTML = `Latitude: ${lat}, Longitude: ${lon}`;
-    alert("location access")
+    lat = position.coords.latitude;
+    lon = position.coords.longitude;
+    document.getElementById("locationis").innerHTML = `Latitude: ${lat}, Longitude: ${lon}`;
+    // alert("location access")
 }
 
 function showError(error) {
     switch(error.code) {
         case error.PERMISSION_DENIED:
-            document.getElementById("location").innerHTML = "User denied the request for Geolocation.";
-            alert("lacation denied")
+            document.getElementById("locationis").innerHTML = "User denied the request for Geolocation.";
+            // alert("lacation denied")
             break;
         case error.POSITION_UNAVAILABLE:
-            document.getElementById("location").innerHTML = "Location information is unavailable.";
+            document.getElementById("locationis").innerHTML = "Location information is unavailable.";
             break;
         case error.TIMEOUT:
-            document.getElementById("location").innerHTML = "The request to get user location timed out.";
+            document.getElementById("locationis").innerHTML = "The request to get user location timed out.";
             break;
         case error.UNKNOWN_ERROR:
-            document.getElementById("location").innerHTML = "An unknown error occurred.";
+            document.getElementById("locationis").innerHTML = "An unknown error occurred.";
             break;
     }
 }
@@ -197,7 +202,7 @@ function createReportCard(doc, container, allowEdit) {
 
 // Expose function globally
 window.updateStatus = updateStatus;
-window.getLocation = getLocation;
+// window.getLocation = getLocation;
 
 // Load Reports when Page Loads
 loadReports();
