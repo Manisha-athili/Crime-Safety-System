@@ -40,7 +40,7 @@ function report() {
         } else {
             // User not logged in, redirect to login page
             alert("Please log in to report a crime.");
-            window.location.href = "/loginIn/login.html"; // Update this path if needed
+            window.location.href = "loginIn/login.html"; // Update this path if needed
         }
     });
 }
