@@ -4,37 +4,41 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Dashboard</title>
-    <script defer src="adminDashboard.js"></script>
+    <link rel="stylesheet" href="adminDashboard.css">
+    <script defer src="adminDashboard.js" type="module"></script>
+    <script defer src="https://kit.fontawesome.com/a076d05399.js"></script>
 </head>
 <body>
-    <h1>Admin Dashboard</h1>
-    
-    <button onclick="logout()">Logout</button>
+    <div class="sidebar">
+        <h2>AdminLTE</h2>
+        <ul>
+            <li><a href="#"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+            <li><a href="#"><i class="fas fa-users"></i> Users</a></li>
+            <li><a href="#"><i class="fas fa-cogs"></i> Settings</a></li>
+            <li><a href="#"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+        </ul>
+    </div>
 
-    <h2>Manage Users</h2>
-    <table border="1">
-        <thead>
-            <tr>
-                <th>Email</th>
-                <th>Role</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody id="userTable"></tbody>
-    </table>
+    <div class="main-content">
+        <header>
+            <h2>Admin Dashboard</h2>
+        </header>
 
-    <h2>All Crime Reports</h2>
-    <table border="1">
-        <thead>
-            <tr>
-                <th>Report ID</th>
-                <th>Description</th>
-                <th>Status</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody id="reportTable"></tbody>
-    </table>
+        <div class="container">
+            <h3>Manage Users</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Email</th>
+                        <th>Role</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody id="usersTable">
+                    <!-- User rows will be inserted dynamically -->
+                </tbody>
+            </table>
+        </div>
+    </div>
 </body>
-<script type="module" src="adminDashboard.js"></script>
 </html>

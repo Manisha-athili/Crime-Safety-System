@@ -39,19 +39,19 @@ async function signIn() {
     let messageBox = document.getElementById("message");
 
     // Validate Email Before Registering
-      // ✅ Empty field validation
+      // Empty field validation
       if (!email || !password) {
         messageBox.innerText = "⚠️ Please enter email and password.";
         return;
     }
 
-    // ✅ Validate email format
+    //  Validate email format
     if (!isValidEmail(email)) {
         messageBox.innerText = "⚠️ Invalid email format!";
         return;
     }
 
-    // ✅ Password length validation
+    // Password length validation
     if (password.length < 6) {
         messageBox.innerText = "⚠️ Password must be at least 6 characters long!";
         return;
@@ -84,7 +84,7 @@ async function signIn() {
 
             
         messageBox.innerText = "✅ Registration Successful! Redirecting...";
-        setTimeout(() => window.location.href = "../index.html", 1500);
+        setTimeout(() => window.location.href = "../index.html", 2000);
         }
         catch (error) {
             console.error("Sign-up error:", error);
@@ -108,7 +108,8 @@ function guestLogin() {
             localStorage.setItem("userRole", "guest"); // Assign a guest role
 
             alert("Logged in as Guest. Redirecting...");
-            window.location.href = "/crime-safety/dashboard/dashboard.html"; // ✅ Ensure correct path
+            messageBox.innerText = "Logged in as Guest. Redirecting...";8
+            setTimeout(() => window.location.href = "../index.html", 2000); 
         })
         .catch((error) => {
             console.error("Guest login error:", error);

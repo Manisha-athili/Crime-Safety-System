@@ -1,10 +1,9 @@
-// // Purpose: To login the user
-// // Import the functions you need from the SDKs you need
+// Firebase Imports
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-app.js";
-
 import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-auth.js";
+import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-firestore.js";
 
-
+// Firebase Configuration
 const firebaseConfig = {
   apiKey: "AIzaSyBsJS-phFoPIzSEtjdr0Y9lZ-J79XpKjV8",
   authDomain: "crime-and-safety.firebaseapp.com",
@@ -17,79 +16,61 @@ const firebaseConfig = {
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
-const auth = getAuth(app); // copied form doc
+const auth = getAuth(app);
+const db = getFirestore(app);
 
-let btn1 = document.getElementById('signin')
-btn1.addEventListener('click',signin)
-function signin(){
+// Accessing Buttons
+let loginBtn = document.getElementById('signin');
+if (loginBtn) loginBtn.addEventListener('click', loginUser);
 
-var email = document.getElementById('email').value;
-var password = document.getElementById('password').value;
-let messageBox = document.getElementById("message");
+// 🔹 Login Function
+async function loginUser() {
+    var email = document.getElementById('email').value;
+    var password = document.getElementById('password').value;
+    let messageBox = document.getElementById("message");
 
-// var Confirm_password = document.getElementById('con_password').value;
-console.log(email);
-console.log(password);
+    // Empty field validation
+    if (!email || !password) {
+        messageBox.innerText = "⚠️ Please enter email and password.";
+        return;
+    }
 
-signInWithEmailAndPassword(auth, email, password)
-.then((userCredential) => {
-// Signed in 
-const user = userCredential.user;
-alert("Logged in successfully!");
-window.location.href ="../index.html";
-})
-.catch((error) => {
-if (error.code === "auth/user-not-found") {
-  messageBox.innerText = "No account found. Please sign up.";
-} else if (error.code === "auth/wrong-password") {
-  messageBox.innerText = "Incorrect password. Try again.";
-} else {
-  messageBox.innerText = error.message, "some..error";
+    try {
+        const userCredential = await signInWithEmailAndPassword(auth, email, password);
+        const user = userCredential.user;
+        const userId = user.uid;
+
+        // Fetch user role from Firestore
+        const userDoc = await getDoc(doc(db, "users", userId));
+        let role = "user"; // Default role
+        if (userDoc.exists()) {
+            role = userDoc.data().role || "user";
+        }
+
+        // Store User ID and Role in Local Storage
+        localStorage.setItem("userId", userId);
+        localStorage.setItem("userRole", role);
+
+        messageBox.innerText = "✅ Login Successful! Redirecting...";
+        
+        // Redirect based on role
+        setTimeout(() => {
+            if (role === "admin") {
+                window.location.href = "../adminDashboard.html";
+            } else if (role === "officer") {
+                window.location.href = "../officerDashboard.html";
+            } else {
+                window.location.href = "../index.html";
+            }
+        }, 1500);
+    } catch (error) {
+        console.error("Login error:", error);
+        if (error.code === "auth/user-not-found") {
+            messageBox.innerText = "No account found. Please sign up.";
+        } else if (error.code === "auth/wrong-password") {
+            messageBox.innerText = "Incorrect password. Try again.";
+        } else {
+            messageBox.innerText = `⚠️ ${error.message}`;
+        }
+    }
 }
-});
-}
-
-
-
-// async function signin() {
-//     var email = document.getElementById('email').value;
-//     var password = document.getElementById('password').value;
-//     let messageBox = document.getElementById("message");
-
-//     try {
-//         const userCredential = await signInWithEmailAndPassword(auth, email, password);
-//         const user = userCredential.user;
-
-//         // Fetch user role from Firestore
-//         const userDoc = await getDoc(doc(db, "users", user.uid));
-//         if (userDoc.exists()) {
-//             const userData = userDoc.data();
-//             const role = userData.role;
-
-//             // Store role in Local Storage
-//             localStorage.setItem("userId", user.uid);
-//             localStorage.setItem("userRole", role);
-
-//             alert("Logged in successfully!");
-
-//             // Redirect based on role
-//             if (role === "admin") {
-//                 window.location.href = "adminDashboard.html";
-//             } else if (role === "officer") {
-//                 window.location.href = "officerDashboard.html";
-//             } else {
-//                 window.location.href = "index.html";
-//             }
-//         } else {
-//             messageBox.innerText = "⚠️ No account found. Please sign up.";
-//         }
-//     } catch (error) {
-//         if (error.code === "auth/user-not-found") {
-//             messageBox.innerText = "No account found. Please sign up.";
-//         } else if (error.code === "auth/wrong-password") {
-//             messageBox.innerText = "Incorrect password. Try again.";
-//         } else {
-//             messageBox.innerText = `⚠️ ${error.message}`;
-//         }
-//     }
-// }

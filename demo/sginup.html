@@ -3,202 +3,216 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Futuristic Neon Sign-Up</title>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron&display=swap" rel="stylesheet">
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <!-- <link rel="stylesheet" href="styles.css"> -->
+
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        :root {
-            --primary-color: #0ff;
-            --secondary-color: cyan;
-            --font-size-large: 36px;
-            --font-size-medium: 18px;
-            --font-size-small: 14px;
-        }
-       
-        h2 {
-            font-size: 36px;
-            padding-bottom: 40px;
-        }
-        ::placeholder {
-            color: rgba(255, 255, 255, 0.5);
-            transition: color 0.3s;
-        }
-        
-        input:hover::placeholder {
-            color: var(--primary-color);
-        }
-        .login-container:hover {
-            box-shadow: 0 0 25px var(--primary-color);
-        }
-
-        .input-box input:hover {
-            border-bottom: 2px solid var(--primary-color);
-        }
-
-        .login-btn:hover {
-            background: linear-gradient(45deg, var(--primary-color), cyan);
-        }
-        
-        h2 {
-            animation: neon-glow 1.5s infinite alternate;
-        }
-       
-    
-        
-
-        @media (max-width: 768px) {
-            .login-container {
-                padding: 50px;
-            }
-            .input-box input {
-                font-size: 16px;
-            }
-            .login-btn {
-                font-size: 16px;
-                padding: 8px 16px;
-            }
-            .links {
-                font-size: 14px;
-            }
-        }
         body {
-            background-color: #010101;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            font-family: 'Orbitron', sans-serif;
-        }
-        .login-container {
-            position: relative;
-            padding: 100px;
-            border-radius: 10px;
-            background: rgba(0, 0, 0, 0.8);
-            box-shadow: 0 0 15px rgba(0, 255, 255, 0.5);
-            text-align: center;
-        }
-        .login-container h2 {
-            color: #0ff;
-            text-shadow: 0 0 10px cyan;
-        }
-        .input-box {
-            position: relative;
-            margin: 15px 0;
-        }
-        .input-box input {
-            width: 100%;
-            padding: 10px;
-            background: transparent;
-            border: none;
-            border-bottom: 2px solid cyan;
-            color: white;
-            outline: none;
-            font-size: 18px;
-            transition: 0.3s;
-            color: var(--primary-color); /* Added text color */
-        }
-        .input-box input:focus {
-            border-bottom: 2px solid var(--primary-color);
-        }
-        .login-btn, .guest-btn {
-            background: linear-gradient(45deg, cyan, var(--primary-color));
-            border: none;
-            padding: 10px 20px;
-            font-size: 18px;
-            color: white;
-            cursor: pointer;
-            transition: 0.3s;
-            box-shadow: 0 0 10px cyan;
-            border-radius: 10px;
-            margin-top: 20px;
-        }
-        .login-btn:hover, .guest-btn:hover {
-            box-shadow: 0 0 20px var(--primary-color);
-        }
-        .login-btn:active, .guest-btn:active {
-            transform: scale(0.95);
-            transition: trans form 0.1s;
-        }
-        .links {
-            margin-top: 20px;
-        }
-        .links a {
-            text-decoration: none;
-            transition: 0.3s;
-            font-size: 14px;
-            /* color: cyan; */
-            color: goldenrod;
-        }
-        .links a:hover {
-            color: rgb(224, 73, 73);
-        }
-        /* span {
-            cursor: pointer;
-            transition: 0.3s;
-        } */
-        #acc{
-            color: var(--primary-color);
-        }
-        @media (max-width: 480px) {
-            .login-container {
-                padding: 30px;
-            }
-            .input-box input {
-                font-size: 14px;
-            }
-            .login-btn, .guest-btn {
-                font-size: 14px;
-                padding: 8px 12px;
-            }
-            h2 {
-                font-size: 28px;
-            }
-            .links {
-                font-size: 12px;
-            }
-        }
+    font-family: Arial, sans-serif;
+}
 
-        @media (min-width: 769px) and (max-width: 1024px) {
-            .login-container {
-                padding: 70px;
-            }
-            .input-box input {
-                font-size: 18px;
-            }
-            .login-btn, .guest-btn {
-                font-size: 18px;
-                padding: 10px 20px;
-            }
-            h2 {
-                font-size: 32px;
-            }
-            .links {
-                font-size: 16px;
-            }
-        }
+.sidebar {
+    height: 100vh;
+    padding-top: 20px;
+}
+
+.sidebar .nav-link {
+    padding: 10px 15px;
+    display: block;
+}
+
+.sidebar .nav-link:hover {
+    background-color: #6c757d;
+    border-radius: 5px;
+}
+
+.table {
+    margin-top: 20px;
+}
+
+.pagination {
+    margin-top: 20px;
+}
+
     </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.16.9/xlsx.full.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.70/pdfmake.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.70/vfs_fonts.js"></script>
 </head>
 <body>
-    <div class="login-container">
-        <h2>Sign Up</h2>
-        <div class="input-box">
-            <input type="text" placeholder="Username">
-        </div>
-        <div class="input-box">
-            <input type="email" placeholder="Email">
-        </div>
-        <div class="input-box">
-            <input type="password" placeholder="Password">
-        </div>
-        <button class="login-btn">SIGN UP</button>
-        <div class="links">
-            <p id="acc">Already have an account?<a href="practice.html"> Login</a></p>
-            <p><a href="../crime-safety/dashboard/dashboard.html">Continue as Guest</a></p>
+    <div class="container-fluid">
+        <div class="row">
+            <nav class="col-md-2 d-none d-md-block bg-dark sidebar">
+                <div class="sidebar-sticky">
+                    <h4 class="text-white p-3">Admin Panel</h4>
+                    <ul class="nav flex-column">
+                        <li class="nav-item"><a class="nav-link text-white" href="#">Dashboard</a></li>
+                        <li class="nav-item"><a class="nav-link text-white" href="#">Users</a></li>
+                    </ul>
+                </div>
+            </nav>
+            <main class="col-md-10 ms-sm-auto px-4">
+                <h2 class="mt-4">User Management</h2>
+                <div class="d-flex justify-content-between mb-3">
+                    <input type="text" id="search" class="form-control w-25" placeholder="Search users...">
+                    <select id="filterRole" class="form-select w-25">
+                        <option value="">Filter by Role</option>
+                        <option value="admin">Admin</option>
+                        <option value="officer">Officer</option>
+                        <option value="user">User</option>
+                    </select>
+                    <button id="exportExcel" class="btn btn-success">Export to Excel</button>
+                    <button id="exportPDF" class="btn btn-danger">Export to PDF</button>
+                </div>
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Email</th>
+                            <th>Role</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="userTableBody">
+                        <!-- Users will be loaded here dynamically -->
+                    </tbody>
+                </table>
+                <nav>
+                    <ul class="pagination">
+                        <li class="page-item"><a class="page-link" href="#" id="prevPage">Previous</a></li>
+                        <li class="page-item"><span class="page-link" id="pageNumber">1</span></li>
+                        <li class="page-item"><a class="page-link" href="#" id="nextPage">Next</a></li>
+                    </ul>
+                </nav>
+            </main>
         </div>
     </div>
+    <!-- <script src="script.js"></script> -->
+     <script>
+        // Firebase Imports
+import { initializeApp } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-app.js";
+import { getFirestore, collection, getDocs, doc, deleteDoc } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-firestore.js";
+
+// Firebase Configuration
+const firebaseConfig = {
+  apiKey: "AIzaSyBsJS-phFoPIzSEtjdr0Y9lZ-J79XpKjV8",
+  authDomain: "crime-and-safety.firebaseapp.com",
+  projectId: "crime-and-safety",
+  storageBucket: "crime-and-safety.appspot.com",
+  messagingSenderId: "167045576983",
+  appId: "1:167045576983:web:4b19f62d9f0268af565f52",
+  measurementId: "G-QRL88H2M6Q"
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+let users = [];
+let currentPage = 1;
+const rowsPerPage = 5;
+
+// Fetch users from Firestore
+async function fetchUsers() {
+    const querySnapshot = await getDocs(collection(db, "users"));
+    users = [];
+    querySnapshot.forEach(doc => {
+        users.push({ id: doc.id, ...doc.data() });
+    });
+    renderTable();
+}
+
+// Render user table
+function renderTable() {
+    const userTableBody = document.getElementById("userTableBody");
+    userTableBody.innerHTML = "";
+
+    const searchQuery = document.getElementById("search").value.toLowerCase();
+    const filterRole = document.getElementById("filterRole").value;
+
+    let filteredUsers = users.filter(user => 
+        user.email.toLowerCase().includes(searchQuery) &&
+        (filterRole === "" || user.role === filterRole)
+    );
+
+    // Pagination Logic
+    const start = (currentPage - 1) * rowsPerPage;
+    const paginatedUsers = filteredUsers.slice(start, start + rowsPerPage);
+
+    paginatedUsers.forEach(user => {
+        let row = `<tr>
+            <td>${user.id}</td>
+            <td>${user.email}</td>
+            <td>${user.role}</td>
+            <td><button class="btn btn-danger btn-sm" onclick="deleteUser('${user.id}')">Delete</button></td>
+        </tr>`;
+        userTableBody.innerHTML += row;
+    });
+
+    document.getElementById("pageNumber").innerText = currentPage;
+}
+
+// Delete user function
+async function deleteUser(userId) {
+    if (confirm("Are you sure you want to delete this user?")) {
+        await deleteDoc(doc(db, "users", userId));
+        alert("User deleted successfully.");
+        fetchUsers();
+    }
+}
+
+// Search and filter event listeners
+document.getElementById("search").addEventListener("input", renderTable);
+document.getElementById("filterRole").addEventListener("change", renderTable);
+
+// Pagination controls
+document.getElementById("prevPage").addEventListener("click", () => {
+    if (currentPage > 1) {
+        currentPage--;
+        renderTable();
+    }
+});
+
+document.getElementById("nextPage").addEventListener("click", () => {
+    if ((currentPage * rowsPerPage) < users.length) {
+        currentPage++;
+        renderTable();
+    }
+});
+
+// Export to Excel
+document.getElementById("exportExcel").addEventListener("click", function () {
+    let table = document.querySelector("table");
+    let wb = XLSX.utils.table_to_book(table);
+    XLSX.writeFile(wb, "Users.xlsx");
+});
+
+// Export to PDF
+document.getElementById("exportPDF").addEventListener("click", function () {
+    let table = document.querySelector("table");
+    let docDefinition = {
+        content: [
+            { text: 'User List', style: 'header' },
+            {
+                table: {
+                    headerRows: 1,
+                    body: [
+                        ['ID', 'Email', 'Role'],
+                        ...users.map(user => [user.id, user.email, user.role])
+                    ]
+                }
+            }
+        ],
+        styles: { header: { fontSize: 18, bold: true } }
+    };
+    pdfMake.createPdf(docDefinition).download("Users.pdf");
+});
+
+// Initial Fetch
+fetchUsers();
+
+     </script>
 </body>
 </html>
+
