@@ -48,7 +48,7 @@ function logout() {
 function report() {
     onAuthStateChanged(auth, (user) => {
         if (user) {
-            window.location.href = "reportForm/crime-report.html"; // Ensure correct path
+            window.location.href = "/crime-safety/reportForm/crime-report.html"; // Ensure correct path
         } else {
             alert("Please log in to report a crime.");
             window.location.href = "loginIn/login.html"; // Redirect to login
@@ -63,20 +63,47 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 // 🔹 Redirect Users Based on Role
-onAuthStateChanged(auth, async (user) => {
-    if (user) {
-        const role = await getUserRole(user);
-        localStorage.setItem("userRole", role); // Store securely
+// onAuthStateChanged(auth, async (user) => {
+//     if (user) {
+//         const role = await getUserRole(user);
+//         localStorage.setItem("userRole", role); // Store securely
 
-        // 🚀 Redirect based on user role 
-        if (role === "admin") {
-            window.location.href = "adminDashboard.html"; // Redirect Admins
-        } else if (role === "officer") {
-            window.location.href = "officerDashboard.html"; // Redirect Officers
+//         // 🚀 Redirect based on user role 
+//         if (role === "admin") {
+//             window.location.href = "adminDashboard.html"; // Redirect Admins
+//         } else if (role === "officer") {
+//             window.location.href = "officerDashboard.html"; // Redirect Officers
+//         } else {
+//             window.location.href = "index.html"; // Redirect Normal Users
+//             // console.log("index c")
+//         }
+//     } else {
+//         console.warn("No user logged in");
+//     }
+// });
+
+// 🔹 Redirect Users Based on Role
+onAuthStateChanged(auth, async (user) => {
+    // Ensure it only runs when the page is first loaded
+    if (!localStorage.getItem("redirected")) {
+        if (user) {
+            const role = await getUserRole(user);
+            localStorage.setItem("userRole", role); // Store role securely
+
+            // Set a flag to indicate that redirection has occurred
+            localStorage.setItem("redirected", "true");
+
+            // 🚀 Redirect based on user role
+            if (role === "admin") {
+                window.location.href = "adminDashboard.html"; // Redirect Admins
+            } else if (role === "officer") {
+                window.location.href = "officerDashboard.html"; // Redirect Officers
+            } else {
+                window.location.href = "index.html"; // Redirect Normal Users
+            }
         } else {
-            window.location.href = "userDashboard.html"; // Redirect Normal Users
+            console.warn("No user logged in");
         }
-    } else {
-        console.warn("No user logged in");
     }
 });
+

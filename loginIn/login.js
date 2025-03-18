@@ -51,16 +51,17 @@ async function loginUser() {
         localStorage.setItem("userId", userId);
         localStorage.setItem("userRole", role);
 
-        messageBox.innerText = "✅ Login Successful! Redirecting...";
+        messageBox.innerText = "✅ Login Successful ! Redirecting...";
         
         // Redirect based on role
         setTimeout(() => {
             if (role === "admin") {
-                window.location.href = "../adminDashboard.html";
+                window.location.href = "../adminDashboard/adminDashboard.html";
             } else if (role === "officer") {
-                window.location.href = "../officerDashboard.html";
-            } else {
-                window.location.href = "../index.html";
+                window.location.href = "../officerDasboard/officerDashboard.html";
+            } else if (role === "user") {
+                window.location.href = "/index.html";
+                console.log("hello")
             }
         }, 1500);
     } catch (error) {
