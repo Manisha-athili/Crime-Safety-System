@@ -1,12 +1,6 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Crime Map</title>
-    
     <!-- Leaflet CSS -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+
 
     <style>
         #map {
@@ -18,8 +12,10 @@
 </head>
 <body>
 
-    <h2>Crime Map</h2>
+    <h2>Crime Map hello</h2>
     <div id="map"></div>
+    <div id="map" style="height: 500px; width: 100%;"></div>
+
 
     <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
@@ -29,8 +25,8 @@
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
     <!-- Include Firebase Config & Map Script -->
-    <script src="firebase-config.js"></script>
-    <script src="map.js"></script>
+    <script src="firebase-config.js" type="module"></script>
+    <script src="map.js" type="module"></script>
 
 </body>
 </html>

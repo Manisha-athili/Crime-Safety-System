@@ -6,7 +6,83 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Crime Reporting System</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
     <link rel="stylesheet" href="report.css">
+
+    <style>
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+        }
+
+        h2 {
+            text-align: center;
+            color: #333;
+        }
+
+        form {
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+            margin: 0 auto;
+            transition: transform 0.3s ease-in-out;
+        }
+
+        form:hover {
+            transform: scale(1.02);
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        input, select, textarea, button {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            transition: border-color 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            border-color: #007bff;
+            box-shadow: 0 0 8px rgba(0, 123, 255, 0.25);
+        }
+
+        button {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s ease-in-out;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        #previewImage {
+            margin-top: 10px;
+            transition: opacity 0.3s ease-in-out;
+        }
+
+        #previewImage.show {
+            opacity: 1;
+        }
+
+        #previewImage.hide {
+            opacity: 0;
+        }
+    </style>
 </head>
 
 <body>
@@ -34,7 +110,12 @@
 
         <label for="datetime">Date & Time:</label>
         <input type="datetime-local" id="datetime" required>
-        <button id="get-location-btn">Get My Location</button>
+        <!-- <button id="location-btn">Get My Location</button> -->
+         <button onclick="getLocation()">get location</button>
+
+         <div id="map" style="height: 400px; width: 100%;"></div>
+
+
 
         <button type="submit" id="report-btn">Submit Report</button>
     </form>
@@ -42,10 +123,6 @@
     <div id="myReportsContainer"></div>
     <div id="otherReportsContainer"></div>
 
-    <!-- Firebase SDK for getting location -->
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js"></script>
-    <script src="firebase-config.js"></script> 
 
     <!-- Crime Reporting Script -->
     <script type="module" src="report.js"></script>

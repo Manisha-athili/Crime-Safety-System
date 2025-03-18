@@ -1,32 +1,90 @@
-// Firebase Firestore Reference
-const db = firebase.firestore();
+// import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
+// import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
 
-// Initialize Leaflet Map
-const map = L.map('map').setView([20.5937, 78.9629], 5); // Default center (India)
+// // Firebase Configuration (Use the same config)
+// const firebaseConfig = {
+//     apiKey: "AIzaSyBsJS-phFoPIzSEtjdr0Y9lZ-J79XpKjV8",
+//     authDomain: "crime-and-safety.firebaseapp.com",
+//     projectId: "crime-and-safety",
+//     storageBucket: "crime-and-safety.appspot.com",
+//     messagingSenderId: "167045576983",
+//     appId: "1:167045576983:web:4b19f62d9f0268af565f52"
+// };
 
-// Add OpenStreetMap Tiles
-L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    attribution: '&copy; OpenStreetMap contributors'
+// // Initialize Firebase
+// const app = initializeApp(firebaseConfig);
+// const db = getFirestore(app);
+
+// // Initialize the map
+// const map = L.map("map").setView([20.5937, 78.9629], 5); // Default: Center of India
+
+// // Add OpenStreetMap tiles
+// L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+//     attribution: "© OpenStreetMap contributors"
+// }).addTo(map);
+
+// // Fetch and display reports on the map
+// async function loadCrimeReports() {
+//     try {
+//         const querySnapshot = await getDocs(collection(db, "crimeReports"));
+//         querySnapshot.forEach((doc) => {
+//             const data = doc.data();
+//             if (data.latitude && data.longitude) {
+//                 // Create a marker on the map for each crime
+//                 L.marker([data.latitude, data.longitude])
+//                     .addTo(map)
+//                     .bindPopup(`<b>${data.crimeType}</b><br>${data.description}<br><small>${data.datetime}</small>`);
+//             }
+//         });
+//     } catch (error) {
+//         console.error("Error loading reports:", error);
+//     }
+// }
+
+// Load crime reports when the page loads
+loadCrimeReports();
+import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
+import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
+
+// Firebase Configuration (Use the same config)
+const firebaseConfig = {
+    apiKey: "AIzaSyBsJS-phFoPIzSEtjdr0Y9lZ-J79XpKjV8",
+    authDomain: "crime-and-safety.firebaseapp.com",
+    projectId: "crime-and-safety",
+    storageBucket: "crime-and-safety.appspot.com",
+    messagingSenderId: "167045576983",
+    appId: "1:167045576983:web:4b19f62d9f0268af565f52"
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+// Initialize the map
+const map = L.map("map").setView([20.5937, 78.9629], 5); // Default: Center of India
+
+// Add OpenStreetMap tiles
+L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+    attribution: "© OpenStreetMap contributors"
 }).addTo(map);
 
-// Load Crime Reports from Firestore
-function loadCrimeReports() {
-    db.collection("reports").get().then((querySnapshot) => {
+// Fetch and display reports on the map
+async function loadCrimeReports() {
+    try {
+        const querySnapshot = await getDocs(collection(db, "crimeReports"));
         querySnapshot.forEach((doc) => {
             const data = doc.data();
             if (data.latitude && data.longitude) {
-                addCrimeMarker(data.latitude, data.longitude, data.description);
+                // Create a marker on the map for each crime
+                L.marker([data.latitude, data.longitude])
+                    .addTo(map)
+                    .bindPopup(`<b>${data.crimeType}</b><br>${data.description}<br><small>${data.datetime}</small>`);
             }
         });
-    });
+    } catch (error) {
+        console.error("Error loading reports:", error);
+    }
 }
 
-// Function to Add Crime Marker on Map
-function addCrimeMarker(lat, lng, description) {
-    L.marker([lat, lng]).addTo(map)
-        .bindPopup(`<b>Crime Reported:</b> ${description}`)
-        .openPopup();
-}
-
-// Load crimes when the page opens
+// Load crime reports when the page loads
 loadCrimeReports();
