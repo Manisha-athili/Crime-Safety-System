@@ -131,8 +131,8 @@ document.getElementById("crimeForm").addEventListener("submit", async function (
             userId: currentUser.uid,
             timestamp: serverTimestamp(),
             image: base64Image,
-            latitude,
-            longitude
+            lat,
+            lon
         });
 
         document.getElementById("crimeForm").reset();
@@ -183,8 +183,8 @@ function createReportCard(doc, container, allowEdit) {
         <p><strong>Description:</strong> ${data.description}</p>
         <p><strong>Location:</strong> ${data.location}</p>
         <p><strong>Date & Time:</strong> ${data.datetime}</p>
-        <p><strong>Latitude:</strong> ${data.latitude}</p>
-        <p><strong>Longitude:</strong> ${data.longitude}</p>
+        <p><strong>Latitude:</strong> ${data.lat}</p>
+        <p><strong>Longitude:</strong> ${data.lon}</p>
         <p><strong>Status:</strong> <span id="status-${doc.id}">${data.status}</span></p>
         ${imageHTML}
         ${allowEdit ? `
