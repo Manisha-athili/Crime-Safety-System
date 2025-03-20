@@ -89,8 +89,8 @@ let lon = null;
 function showPosition(position) {
     lat = position.coords.latitude;
     lon = position.coords.longitude;
-    document.getElementById("locationis").innerHTML = `Latitude: ${lat}, Longitude: ${lon}`;
-    // alert("location access")
+    // document.getElementById("locationis").innerHTML = `Latitude: ${lat}, Longitude: ${lon}`;
+    alert("location accessed")
 }
 
 function showError(error) {
@@ -101,6 +101,7 @@ function showError(error) {
             break;
         case error.POSITION_UNAVAILABLE:
             document.getElementById("locationis").innerHTML = "Location information is unavailable.";
+            // alert("lacation denied")
             break;
         case error.TIMEOUT:
             document.getElementById("locationis").innerHTML = "The request to get user location timed out.";

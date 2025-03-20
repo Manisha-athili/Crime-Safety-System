@@ -1,32 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crime Reports Map</title>
     <!-- Leaflet CSS -->
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-
-
-    <style>
-        #map {
-            height: 500px;
-            width: 100%;
-            border-radius: 10px;
-        }
-    </style>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <!-- css  -->
+    <link rel="stylesheet" href="map.css">
+    
 </head>
 <body>
-
-    <h2>Crime Map hello</h2>
     <div id="map"></div>
-    <div id="map" style="height: 500px; width: 100%;"></div>
 
-
-    <!-- Firebase SDK -->
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js"></script>
-    
     <!-- Leaflet JS -->
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <!-- Firebase App (the core Firebase SDK) -->
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
+    <!-- Firebase Firestore -->
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js"></script>
 
-    <!-- Include Firebase Config & Map Script -->
-    <script src="firebase-config.js" type="module"></script>
-    <script src="map.js" type="module"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
 
+
+    <script type="module">
+        // Your Firebase configuration 
+        const firebaseConfig = {
+            apiKey: "AIzaSyBsJS-phFoPIzSEtjdr0Y9lZ-J79XpKjV8",
+            authDomain: "crime-and-safety.firebaseapp.com",
+            projectId: "crime-and-safety",
+            storageBucket: "crime-and-safety.appspot.com",
+            messagingSenderId: "167045576983",
+            appId: "1:167045576983:web:4b19f62d9f0268af565f52"
+        };
+
+        // Initialize Firebase
+        const app = firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore(app);
+        const auth = firebase.auth();
+
+        // Initialize the map centered on Hyderabad
+        const map = L.map('map').setView([17.3850, 78.4867], 12);
+
+        // Add OpenStreetMap tiles
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map);
+
+        // Fetch crime reports from Firestore
+        db.collection("crimeReports").get().then((querySnapshot) => {
+            querySnapshot.forEach((doc) => {
+                const data = doc.data();
+                if (data.lat && data.lon) {
+                    // Create a marker for each crime report
+                    const marker = L.marker([data.lat, data.lon]).addTo(map);
+                    
+                    // Create a popup with crime details
+                    const popupContent = `
+                        <div>
+                            <h3>${data.crimeType}</h3>
+                            <p><strong>Description:</strong> ${data.description}</p>
+                            <p><strong>Location:</strong> ${data.location}</p>
+                            <p><strong>Date & Time:</strong> ${data.datetime}</p>
+                            <p><strong>Status:</strong> ${data.status}</p>
+                            ${data.image ? `<img src="${data.image}" alt="Crime Image" style="width:100%;max-width:200px;">` : ''}
+                        </div>
+                    `;
+                    marker.bindPopup(popupContent);
+                }
+            });
+        }).catch((error) => {
+            console.error("Error fetching crime reports: ", error);
+        });
+    </script>
 </body>
 </html>
