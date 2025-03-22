@@ -4,7 +4,7 @@ import {
     doc, updateDoc, deleteDoc, where, getDoc 
 } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
 import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
-// import { getMessaging } from "firebase/messaging";
+import { getMessaging } from "firebase/messaging";
 
 // ✅ Step 1: Firebase Configuration
 const firebaseConfig = {
@@ -21,7 +21,7 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const auth = getAuth(app);
-// const messaging = getMessaging(app);
+const messaging = getMessaging(app);
 
 getToken(messaging, {vapidKey: "BKagOny0KF_2pCJQ3m....moL0ewzQ8rZu"});
 

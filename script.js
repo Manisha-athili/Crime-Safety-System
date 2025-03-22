@@ -75,7 +75,13 @@ async function saveTokenToFirestore(token) {
 }
 
 // 🚀 Request Notification Permission & Get FCM Token
-async function requestPermission() {
+async function requestNotificationPermission() {
+    if (Notification.permission === "denied") {
+        console.warn("Notifications are blocked. Please enable them in browser settings.");
+        alert("Notifications are blocked. Enable them in your browser settings to receive alerts.");
+        return;
+    }
+
     try {
         const permission = await Notification.requestPermission();
         if (permission === "granted") {
@@ -83,39 +89,37 @@ async function requestPermission() {
             console.log("FCM Token:", token);
             if (token) saveTokenToFirestore(token);
         } else {
-            console.warn("Notification permission denied.");
+            console.log("Notification permission denied.");
         }
     } catch (error) {
         console.error("Error getting FCM token:", error);
     }
 }
 
+
 // 🚀 Handle Authentication & Role-based Redirection
 onAuthStateChanged(auth, async (user) => {
-    if (!user) return;
-    
-    const role = await getUserRole(user);
-    localStorage.setItem("userRole", role);
-    
-    if (!localStorage.getItem("redirected")) {
+    if (!localStorage.getItem("redirected") && user) {
+        const role = await getUserRole(user);
+        localStorage.setItem("userRole", role);
         localStorage.setItem("redirected", "true");
 
         if (role === "officer") {
             window.location.href = "officerDashboard.html";
         } else {
-            // document.getElementById("logoutBtn")?.classList.remove("hide-btn");
+            document.getElementById("logoutBtn")?.classList.remove("hide-btn");
             window.location.href = "index.html";
         }
-    }
 
-    // Request FCM Token only after authentication & redirection
-    requestPermission();
+        // 🚀 Request Notification Permission (ONLY if not already blocked)
+        requestNotificationPermission();
+    }
 });
 
 // 🚀 Set up event listeners
 document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("logoutBtn")?.addEventListener("click", logout);
-    const logoutBtn = document.getElementById("logoutBtn");
-    logoutBtn.classList.remove("hide-btn");
+    // const logoutBtn = document.getElementById("logoutBtn");
+    // logoutBtn.classList.remove("hide-btn");
     document.getElementById("crimeReport")?.addEventListener("click", report);
 });
