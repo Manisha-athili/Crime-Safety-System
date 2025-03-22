@@ -23,12 +23,15 @@ const messaging = getMessaging(app);
 // 🚀 Register Service Worker (Corrected Path)
 if ("serviceWorker" in navigator) {
     navigator.serviceWorker.register('/firebase-messaging-sw.js')
-    .then(function(registration) {
-      console.log('Service Worker registered with scope:', registration.scope);
+    .then((registration) => {
+        console.log('Service Worker registered:', registration);
     })
-    .catch(function(error) {
-      console.log('Service Worker registration failed:', error);
-    });}
+    .catch((error) => {
+        console.error('Service Worker registration failed:', error);
+    });
+} else {
+    console.log("Service workers are not supported in this browser.");
+}
 
 // 🚀 Get User Role Securely from Firestore
 async function getUserRole(user) {
