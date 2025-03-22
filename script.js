@@ -28,7 +28,7 @@ if ("serviceWorker" in navigator) {
     })
     .catch(function(error) {
       console.log('Service Worker registration failed:', error);
-    });
+    });}
 
 // 🚀 Get User Role Securely from Firestore
 async function getUserRole(user) {
