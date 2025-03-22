@@ -20,10 +20,10 @@ const auth = getAuth(app);
 const db = getFirestore(app);
 const messaging = getMessaging(app);
 
-// 🚀 Register Service Worker
+// 🚀 Register Service Worker (Corrected Path)
 if ("serviceWorker" in navigator) {
     navigator.serviceWorker
-        .register("/firebase-messaging-sw.js")
+        .register("firebase-messaging-sw.js")
         .then((registration) => {
             console.log("Service Worker registered with scope:", registration.scope);
         })
@@ -85,8 +85,11 @@ async function requestNotificationPermission() {
     try {
         const permission = await Notification.requestPermission();
         if (permission === "granted") {
-            const token = await getToken(messaging);
+            const token = await getToken(messaging, {
+                vapidKey: "BG9cdOmjzVeLvgGpTFK5-9eunHiIKu4Je6gvnuCfXZGfAjMcGOjWn3JtbSPBQQ_t59Ndy1xDA3bSkUOIsPFzmmM"  
+            });
             console.log("FCM Token:", token);
+            // You can send this token to your backend for future notifications
             if (token) saveTokenToFirestore(token);
         } else {
             console.log("Notification permission denied.");
@@ -95,7 +98,6 @@ async function requestNotificationPermission() {
         console.error("Error getting FCM token:", error);
     }
 }
-
 
 // 🚀 Handle Authentication & Role-based Redirection
 onAuthStateChanged(auth, async (user) => {
@@ -116,10 +118,9 @@ onAuthStateChanged(auth, async (user) => {
     }
 });
 
-// 🚀 Set up event listeners
+// 🚀 Ensure DOM is Loaded Before Running Event Listeners
 document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("logoutBtn")?.addEventListener("click", logout);
-    // const logoutBtn = document.getElementById("logoutBtn");
-    // logoutBtn.classList.remove("hide-btn");
+    document.getElementById("logoutBtn")?.classList.remove("hide-btn");  
     document.getElementById("crimeReport")?.addEventListener("click", report);
 });
