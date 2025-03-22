@@ -52,16 +52,35 @@ async function loginUser() {
         localStorage.setItem("userRole", role);
 
         messageBox.innerText = "✅ Login Successful ! Redirecting...";
+
+        // detailes of officer01 and officer02 by which we can login as officer
+        const officer1 = "CSRS.2025.01@gmail.com";
+        const password1 = "officer01";
+        const uid1 = "3L2FSUK2ewfZeJY5a6Tp8ajjSPv1";
+        
+        const officer2 = "officerCSR202502@gmail.com";
+        const uid2 = "x75JiCmglKMtHo0RddCnPGSxHWD3";
+        const password2 = "officer02";
+        
+        if (email === officer1 && password === password1) {
+            // if (userId === uid1){
+            //     role = "officer";
+            // }
+            role = "officer";
+        } else if (email === officer2 && password === password2) {
+            // if (userId === uid2){
+            //     role = "officer";
+            // }
+            role = "officer";   
+        }
         
         // Redirect based on role
         setTimeout(() => {
-            if (role === "admin") {
-                window.location.href = "../adminDashboard/adminDashboard.html";
-            } else if (role === "officer") {
+            if (role === "officer") {
                 window.location.href = "../officerDasboard/officerDashboard.html";
             } else if (role === "user") {
                 window.location.href = "../index.html";
-                console.log("hello")
+                // console.log("hello")
             }
         }, 1500);
     } catch (error) {

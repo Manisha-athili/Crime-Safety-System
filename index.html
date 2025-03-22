@@ -11,15 +11,19 @@
     <div class="dashboard-container">
         <!-- <a href="loginIn/login.html"></a> -->
         <h2>Welcome to the Crime & Safety System</h2>
-        <button id="logoutBtn" class="btn">Logout</button>  
+        <button id="logoutBtn" class="btn hide-btn">Logout</button>  
         <button id="crimeReport" class="btn">Crime Report</button>
         <button class="btn" onclick="window.location.href='./crime-safety/all_Reports/allReports.html'">View All Reports</button>
          <!-- Button to Navigate to Map Page -->
           
     <button class="btn" onclick="location.href='./map/map.html'">View Reported Crimes on Map</button>
     </div>
-    <!-- <a href="./map/map.html"></a> -->
+
     <script src="script.js" type="module"></script>
+    <script src="https://www.gstatic.com/firebasejs/11.4.0/firebase-messaging.js"></script>
+    <script type="module" src="firebase-messaging.js"></script>
+
+
 
 </body>
 </html>

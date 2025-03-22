@@ -1,7 +1,9 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-app.js";
 import { getAuth, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-auth.js";
-import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-firestore.js";
+import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-firestore.js";
+import { getMessaging, getToken } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-messaging.js";
 
+// 🚀 Firebase Config
 const firebaseConfig = {
     apiKey: "AIzaSyBsJS-phFoPIzSEtjdr0Y9lZ-J79XpKjV8",
     authDomain: "crime-and-safety.firebaseapp.com",
@@ -12,78 +14,108 @@ const firebaseConfig = {
     measurementId: "G-QRL88H2M6Q"
 };
 
-// Initialize Firebase
+// 🚀 Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
+const messaging = getMessaging(app);
+
+// 🚀 Register Service Worker
+if ("serviceWorker" in navigator) {
+    navigator.serviceWorker
+        .register("/firebase-messaging-sw.js")
+        .then((registration) => {
+            console.log("Service Worker registered with scope:", registration.scope);
+        })
+        .catch((error) => {
+            console.error("Service Worker registration failed:", error);
+        });
+} else {
+    console.log("Service workers are not supported in this browser.");
+}
 
 // 🚀 Get User Role Securely from Firestore
 async function getUserRole(user) {
     if (!user) return null;
-
     const userRef = doc(db, "users", user.uid);
     const userSnap = await getDoc(userRef);
-
     return userSnap.exists() ? userSnap.data().role : null;
 }
 
-// 🔹 Logout function with confirmation
+// 🚀 Logout function
 function logout() {
-    console.log("Logging out...");
-    const confirmLogout = window.confirm("Are you sure you want to log out?");
-    if (confirmLogout) {
-        signOut(auth)
-            .then(() => {
-                alert("Logged out successfully");
-                localStorage.removeItem("userRole"); // Clear role cache
-                window.location.href = "loginIn/login.html"; // Redirect to login page
-            })
-            .catch(error => {
-                console.error("Logout failed: ", error.message);
-            });
+    if (window.confirm("Are you sure you want to log out?")) {
+        signOut(auth).then(() => {
+            alert("Logged out successfully");
+            localStorage.removeItem("userRole");
+            localStorage.removeItem("redirected");
+            window.location.href = "loginIn/login.html";
+        }).catch(error => console.error("Logout failed: ", error.message));
     }
 }
 
-// 🔹 Crime Report function (Redirects to login if not authenticated)
+// 🚀 Crime Report function
 function report() {
     onAuthStateChanged(auth, (user) => {
         if (user) {
-            window.location.href = "crime-safety/reportForm/crime-report.html"; 
+            window.location.href = "crime-safety/reportForm/crime-report.html";
         } else {
             alert("Please log in to report a crime.");
-            window.location.href = "loginIn/login.html"; // Redirect to login
+            window.location.href = "loginIn/login.html";
         }
     });
 }
 
-// 🔹 Set up event listeners after DOM is loaded
-document.addEventListener("DOMContentLoaded", function () {
-    document.getElementById("logoutBtn")?.addEventListener("click", logout);
-    document.getElementById("crimeReport")?.addEventListener("click", report);
-});
+// 🚀 Save FCM Token
+async function saveTokenToFirestore(token) {
+    const user = auth.currentUser;
+    if (!user) return;
+    const tokenRef = doc(db, 'userTokens', user.uid);
+    await setDoc(tokenRef, { token }, { merge: true });
+}
 
-// 🔹 Redirect Users Based on Role
-onAuthStateChanged(auth, async (user) => {
-    // Ensure it only runs when the page is first loaded
-    if (!localStorage.getItem("redirected")) {
-        if (user) {
-            const role = await getUserRole(user);
-            localStorage.setItem("userRole", role); // Store role securely
-
-            // Set a flag to indicate that redirection has occurred
-            localStorage.setItem("redirected", "true");
-
-            // 🚀 Redirect based on user role
-            if (role === "admin") {
-                window.location.href = "adminDashboard.html"; // Redirect Admins
-            } else if (role === "officer") {
-                window.location.href = "officerDashboard.html"; // Redirect Officers
-            } else {
-                window.location.href = "index.html"; // Redirect Normal Users
-            }
+// 🚀 Request Notification Permission & Get FCM Token
+async function requestPermission() {
+    try {
+        const permission = await Notification.requestPermission();
+        if (permission === "granted") {
+            const token = await getToken(messaging);
+            console.log("FCM Token:", token);
+            if (token) saveTokenToFirestore(token);
         } else {
-            console.warn("No user logged in");
+            console.warn("Notification permission denied.");
+        }
+    } catch (error) {
+        console.error("Error getting FCM token:", error);
+    }
+}
+
+// 🚀 Handle Authentication & Role-based Redirection
+onAuthStateChanged(auth, async (user) => {
+    if (!user) return;
+    
+    const role = await getUserRole(user);
+    localStorage.setItem("userRole", role);
+    
+    if (!localStorage.getItem("redirected")) {
+        localStorage.setItem("redirected", "true");
+
+        if (role === "officer") {
+            window.location.href = "officerDashboard.html";
+        } else {
+            // document.getElementById("logoutBtn")?.classList.remove("hide-btn");
+            window.location.href = "index.html";
         }
     }
+
+    // Request FCM Token only after authentication & redirection
+    requestPermission();
 });
 
+// 🚀 Set up event listeners
+document.addEventListener("DOMContentLoaded", () => {
+    document.getElementById("logoutBtn")?.addEventListener("click", logout);
+    const logoutBtn = document.getElementById("logoutBtn");
+    logoutBtn.classList.remove("hide-btn");
+    document.getElementById("crimeReport")?.addEventListener("click", report);
+});

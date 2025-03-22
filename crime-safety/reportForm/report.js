@@ -4,6 +4,7 @@ import {
     doc, updateDoc, deleteDoc, where, getDoc 
 } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
 import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
+// import { getMessaging } from "firebase/messaging";
 
 // ✅ Step 1: Firebase Configuration
 const firebaseConfig = {
@@ -20,6 +21,9 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const auth = getAuth(app);
+// const messaging = getMessaging(app);
+
+getToken(messaging, {vapidKey: "BKagOny0KF_2pCJQ3m....moL0ewzQ8rZu"});
 
 let currentUser = null;
 let userRole = "user";  // Default role for users
@@ -65,7 +69,7 @@ imageInput.addEventListener("change", function () {
     }
 });
 
-// ✅ Step 5: Get User Location (Latitude & Longitude)
+// Step 5: Get User Location (Latitude & Longitude)
 // let latitude = "null";
 // let longitude = "null";
 const locationButton = document.getElementById("getLocation");
@@ -112,7 +116,7 @@ function showError(error) {
     }
 }
 
-// ✅ Step 6: Handle Crime Report Submission
+// Step 6: Handle Crime Report Submission
 document.getElementById("crimeForm").addEventListener("submit", async function (event) {
     event.preventDefault();
 

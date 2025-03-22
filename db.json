@@ -1,6 +1,26 @@
-{
-  "description": "Robbery near ABC Road",
-  "latitude": 28.7041,
-  "longitude": 77.1025,
-  "timestamp": "2024-03-09T12:00:00Z"
-}
+[
+  {
+    "crimeType": "Robbery",
+    "description": "Robbery near ABC Road",
+    "location": "ABC Road",
+    "datetime": "2024-03-09T12:00:00Z",
+    "status": "pending",
+    "userId": "123",
+    "timestamp": "2024-03-09T12:00:00Z",
+    "image": "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAkGBxMTEhUTExMWFhUXGBgYGBgYGBgYGBgYGBgYFxgYFxgYHSggGBolHRgYITEhJSkrLi4uFx8zODMtNygtLisBCgoKDg0OGxAQGy0lHyUt",
+    "lat": 28.7041,
+    "lon": 77.1025
+  },
+  {
+    "crimeType": "Robbery",
+    "description": "Robbery near XYZ Road",
+    "location": "XYZ Road",
+    "datetime": "2024-03-09T12:00:00Z",
+    "status": "pending",
+    "userId": "123",
+    "timestamp": "2024-03-09T12:00:00Z",
+    "image": "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAkGBxMTEhUTExMWFhUXGBgYGBgYGBgYGBgYGBgYFxgYFxgYHSggGBolHRgYITEhJSkrLi4uFx8zODMtNygtLisBCgoKDg0OGxAQGy0lHyUt",
+    "lat": 28.7041,
+    "lon": 77.1025
+  }
+]
