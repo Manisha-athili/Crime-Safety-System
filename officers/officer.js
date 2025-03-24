@@ -21,6 +21,8 @@ const auth = getAuth(app);     // Initialize Auth
 // Redirect if not officer
 document.addEventListener("DOMContentLoaded", async function () {
     const userRole = localStorage.getItem("userRole");
+    console.log(userRole);
+    
 
     if (userRole !== "officer") {
         alert("Access Denied! Redirecting...");
