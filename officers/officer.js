@@ -1,9 +1,22 @@
+import { initializeApp } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-app.js";
 import { getAuth, signOut } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-auth.js";
 import { getFirestore, collection, onSnapshot, updateDoc, doc } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-firestore.js";
 
+// Firebase Config
+const firebaseConfig = {
+    apiKey: "AIzaSyBsJS-phFoPIzSEtjdr0Y9lZ-J79XpKjV8",
+    authDomain: "crime-and-safety.firebaseapp.com",
+    projectId: "crime-and-safety",
+    storageBucket: "crime-and-safety.appspot.com",
+    messagingSenderId: "167045576983",
+    appId: "1:167045576983:web:4b19f62d9f0268af565f52",
+    measurementId: "G-QRL88H2M6Q"
+};
+
 // Initialize Firebase
-const db = getFirestore();
-const auth = getAuth();
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);  // Initialize Firestore
+const auth = getAuth(app);     // Initialize Auth
 
 // Redirect if not officer
 document.addEventListener("DOMContentLoaded", async function () {
@@ -66,17 +79,9 @@ async function updateReportStatus(reportId, newStatus) {
 // Logout function
 document.getElementById("logout").addEventListener("click", () => {
     signOut(auth).then(() => {
-        alert("logout success")
+        alert("Logout success");
         localStorage.removeItem("userRole");
         localStorage.removeItem("userEmail");
         window.location.href = "login.html";
     });
 });
-
-// function logout(){
-//     alert("logout success")
-//     localStorage.removeItem("userRole");
-//     localStorage.removeItem("userEmail");
-//     window.location.href = "login.html";
-
-// }
