@@ -20,23 +20,23 @@ const auth = getAuth(app);
 const db = getFirestore(app);
 const messaging = getMessaging(app);
 
-// 🚀 Register Service Worker (Corrected Path)
+// 🚀 Register Service Worker
 if ("serviceWorker" in navigator) {
-    console.log("coming")
-    // navigator.serviceWorker.register('./firebase-messaging-sw.js',{
-    //     type: 'module',
-    //   })
-    navigator.serviceWorker.register("./sw.js")
-    .then((registration) => {
-        console.log(registration)
-        console.log('Service Worker registered:', registration);
-    })
-    .catch((error) => {
-        console.error('Service Worker registration failed:', error);
-    });
-} else {
-    console.log("Service workers are not supported in this browser.");
-}
+        console.log("coming into if");
+        
+    navigator.serviceWorker.register("/firebase-messaging-sw.js", { scope: "/" }).then(
+      (registration) => {
+        console.log("success");
+        
+        console.log("Service worker registration succeeded:", registration);
+      },
+      (error) => {
+        console.error(`Service worker registration failed: ${error}`);
+      },
+    );
+  } else {
+    console.error("Service workers are not supported.");
+  }
 
 // 🚀 Get User Role Securely from Firestore
 async function getUserRole(user) {
