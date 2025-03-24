@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Officer Dashboard</title>
+    <link rel="stylesheet" href="officer.css">
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <!-- <nav class="navbar">
+        <div class="navbar-container">
+            <a href="#" class="navbar-brand">Dashboard</a>
+            <ul class="navbar-menu">
+                <li><a href="#overview">Reports</a></li>
+                <li><a href="#management">Incident Management</a></li>
+                <li><a href="#analytics">Analytics</a></li>
+                <li><a href="#notifications">Notifications</a></li>
+                <li><a href="#profile">Profile</a></li>
+                <li><a href="#" id="logout">Logout</a></li>
+            </ul>
+        </div>
+    </nav> -->
+
+    <div class="sidebar">
+        <h2>Dashboard</h2>
+        <ul>
+            <li><a href="#overview">Incident Overview</a></li>
+            <li><a href="#analytics">Analytics</a></li>
+            <li><a href="#notifications">Notifications</a></li>
+            <!-- <li><a href="#">Crimes on Map</a></li> -->
+            <!-- <li><a href="#">Logout</a></li> -->
+             <button id="map" class="btn-side" onclicke="window.location.href='../map/map.html';" >Crimes on Map</button>
+             <button id="logout" class="btn-side" >Logout</button>
+        </ul>
+    </div>
+    <div class="main-content">
+        <section id="overview">
+             <!-- Incident Overview Content -->
+            <h2>Incident Reports</h2>
+            <div id="reports-container"></div>  
+        </section>
+        <section id="analytics">
+            <!-- Analytics Content -->
+             
+        </section>
+        <section id="notifications">
+            <!-- Notifications Content -->
+        </section>
+        <section id="profile">
+            <!-- Profile Content -->
+        </section>
+    </div>
+    <script src="officer.js"></script>
+</body>
+</html>

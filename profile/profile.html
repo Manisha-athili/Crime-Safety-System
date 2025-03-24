@@ -1,0 +1,69 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Profile</title>
+    <link rel="stylesheet" href="profile.css">
+</head>
+<body>
+    <div class="profile-card">
+        <!-- <h1>User Profile</h1> -->
+        <div class="profile-photo-section">
+            <img id="profile-photo" src="safety.png" alt="Profile Photo">
+            <input type="file" id="upload-photo" accept="image/*">
+        </div>
+        <div class="user-details">
+            <h2 id="user-name">User Name</h2>
+            <!-- Personal Details Form -->
+            <form id="personal-details-form">
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email">
+                
+                <label for="phone">Phone Number:</label>
+                <input type="tel" id="phone" name="phone">
+                
+                <label for="address">Address:</label>
+                <input type="text" id="address" name="address">
+                
+                <button type="submit">Update Details</button>
+            </form>
+        </div>
+        <div class="emergency-contacts">
+            <h2>Emergency Contacts</h2>
+            <form id="emergency-contacts-form">
+                <label for="contact-name">Contact Name:</label>
+                <input type="text" id="contact-name" name="contact-name">
+                
+                <label for="contact-phone">Contact Phone:</label>
+                <input type="tel" id="contact-phone" name="contact-phone">
+                
+                <button type="submit">Add Contact</button>
+            </form>
+            <ul id="contacts-list">
+                <!-- List of emergency contacts will be populated here -->
+            </ul>
+        </div>
+        <div class="user-actions">
+            <button id="my-reports">My Reports</button>
+            <button id="logout">Logout</button>
+        </div>
+        <div id="reports-section" class="hidden">
+            <h2>My Reports</h2>
+            <ul id="reports-list">
+                <!-- User-specific reports will be listed here -->
+            </ul>
+        </div>
+    </div>
+
+    <!-- Firebase App (the core Firebase SDK) -->
+    <!-- <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js"></script> -->
+     <!-- Add Firebase products that you want to use -->
+    <!-- <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-auth.js"></script> -->
+    <!-- <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore.js"></script> -->
+    <!-- <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-storage.js"></script>  -->
+    <script type="module" src="profile.js" ></script>
+
+</body>
+</html>
