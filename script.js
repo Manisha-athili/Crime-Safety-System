@@ -22,13 +22,13 @@ const messaging = getMessaging(app);
 
 // 🚀 Register Service Worker (Corrected Path)
 if ("serviceWorker" in navigator) {
+    console.log("coming")
     navigator.serviceWorker.register('/firebase-messaging-sw.js',{
         type: 'module',
       })
     .then((registration) => {
+        console.log(registration)
         console.log('Service Worker registered:', registration);
-        
-
     })
     .catch((error) => {
         console.error('Service Worker registration failed:', error);
