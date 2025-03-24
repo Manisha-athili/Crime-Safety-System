@@ -77,7 +77,7 @@ async function loginUser() {
         // Redirect based on role
         setTimeout(() => {
             if (role === "officer") {
-                window.location.href = "../officerDasboard/officerDashboard.html";
+                window.location.href = "../officers/officer.html";
             } else if (role === "user") {
                 window.location.href = "../index.html";
                 // console.log("hello")
