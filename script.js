@@ -106,7 +106,7 @@ onAuthStateChanged(auth, async (user) => {
         localStorage.setItem("redirected", "true");
 
         if (role === "officer") {
-            window.location.href = "officerDashboard.html";
+            window.location.href = "officer.html";
         } else {
             document.getElementById("logoutBtn")?.classList.remove("hide-btn");
             window.location.href = "index.html";

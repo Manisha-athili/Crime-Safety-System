@@ -16,15 +16,14 @@ firebase.initializeApp({
 
 const messaging = firebase.messaging();
 
-// Handle background messages
-messaging.onBackgroundMessage((payload) => {
-    console.log('Received background message:', payload);
 
-    const notificationTitle = payload.notification?.title || "New Notification";
+// Handle background notifications
+messaging.onBackgroundMessage(function(payload) {
+    console.log('Received background message: ', payload);
+    const notificationTitle = 'Crime & Safety Alert';
     const notificationOptions = {
-        body: payload.notification?.body || "You have a new message.",
-        // icon: '/firebase-logo.png'
+      body: payload.body,
     };
-
+  
     self.registration.showNotification(notificationTitle, notificationOptions);
-});
+  });
