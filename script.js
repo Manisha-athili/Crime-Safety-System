@@ -24,7 +24,8 @@ const messaging = getMessaging(app);
 if ("serviceWorker" in navigator) {
         console.log("coming into if");
         
-    navigator.serviceWorker.register("firebase-messaging-sw.js", { scope: "/" }).then(
+    navigator.serviceWorker.register("/firebase-messaging-sw.js")
+    .then(
       (registration) => {
         console.log("success");
         
