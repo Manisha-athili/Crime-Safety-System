@@ -21,7 +21,7 @@ const db = getFirestore(app);
 const messaging = getMessaging(app);
 
 // 🚀 Register Service Worker
-if ("serviceWorker" in navigator) {
+if ('serviceWorker' in navigator) {
         console.log("coming into if");
         
     navigator.serviceWorker.register('firebase-messaging-sw.js')
@@ -30,11 +30,11 @@ if ("serviceWorker" in navigator) {
         console.log("success");
         
         console.log("Service worker registration succeeded:", registration);
-      },
-      (error) => {
-        console.error(`Service worker registration failed: ${error}`);
-      },
-    );
+      }).catch(
+            (error) => {
+                console.error(`Service worker registration failed: ${error}`);
+              }
+      )
   } else {
     console.error("Service workers are not supported.");
   }
