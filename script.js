@@ -41,7 +41,7 @@ const initializeMessaging = async () => {
 if ('serviceWorker' in navigator) {
     (async () => {
         try {
-            const registration = await navigator.serviceWorker.register('./firebase-messaging-sw.js', {
+            const registration = await navigator.serviceWorker.register('/firebase-messaging-sw.js', {
                 scope: '/'
             });
             console.log('Service Worker registered with scope:', registration.scope);
