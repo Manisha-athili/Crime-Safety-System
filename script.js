@@ -1,7 +1,7 @@
-import { initializeApp } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-app.js";
-import { getAuth, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-auth.js";
-import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-firestore.js";
-import { getMessaging, getToken } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-messaging.js";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
+import { getAuth, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
+import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js";
+import { getMessaging, getToken, isSupported } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-messaging.js";
 
 // 🚀 Firebase Config
 const firebaseConfig = {
@@ -18,8 +18,6 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
-// const messaging = getMessaging(app);
-
 
 
 let messaging = null;
@@ -38,18 +36,37 @@ const initializeMessaging = async () => {
     }
 };
 
+// 🚀 Register Service Worker
+// if ('serviceWorker' in navigator) {
+//         console.log("coming into if");
+        
+//     navigator.serviceWorker.register('firebase-messaging-sw.js')
+//     .then(
+//       (registration) => {
+//         console.log("success");
+        
+//         console.log("Service worker registration succeeded:", registration.scope);
+//       }).catch(
+//             (error) => {
+//                 console.error(`Service worker registration failed: ${error}`);
+//               }
+//       )
+//   } else {
+//     console.error("Service workers are not supported.");
+//   }
+
 if ('serviceWorker' in navigator) {
     (async () => {
         try {
-            const registration = await navigator.serviceWorker.register('/firebase-messaging-sw.js');
+            const registration = await navigator.serviceWorker.register('./firebase-messaging-sw.js', {
+                scope: '/'
+            });
             console.log('Service Worker registered with scope:', registration.scope);
         } catch (error) {
             console.error('Service Worker registration failed:', error);
         }
     })();
 }
-
-
 
 
 // 🚀 Get User Role Securely from Firestore
@@ -94,7 +111,6 @@ async function saveTokenToFirestore(token) {
 
 // 🚀 Request Notification Permission & Get FCM Token
 async function requestNotificationPermission() {
-
     // Initialize messaging only once
     if (!messaging) {
         if (!await initializeMessaging()) {
@@ -105,34 +121,39 @@ async function requestNotificationPermission() {
 
     if (Notification.permission === "denied") {
         console.warn("Notifications are blocked. Please enable them in browser settings.");
-        alert("Notifications are blocked. Enable them in your browser settings to receive alerts.");
         return;
     }
 
     try {
-        const permission = await Notification.requestPermission();
-        if (permission === "granted") {
-            const token = await getToken(messaging, {
-                vapidKey: "BG9cdOmjzVeLvgGpTFK5-9eunHiIKu4Je6gvnuCfXZGfAjMcGOjWn3JtbSPBQQ_t59Ndy1xDA3bSkUOIsPFzmmM"  
-            });
-            console.log("FCM Token:", token);
-            // You can send this token to your backend for future notifications
-            if (token) saveTokenToFirestore(token);
-        } else {
-            console.log("Notification permission denied.");
+        // If permission is not yet granted, ask the user
+        if (Notification.permission === "default") {
+            const permission = await Notification.requestPermission();
+            if (permission === "granted") {
+                const token = await getToken(messaging, {
+                    vapidKey: "BG9cdOmjzVeLvgGpTFK5-9eunHiIKu4Je6gvnuCfXZGfAjMcGOjWn3JtbSPBQQ_t59Ndy1xDA3bSkUOIsPFzmmM"
+                });
+                if (token) {
+                    await saveTokenToFirestore(token);
+                }
+            } else {
+                console.log("Notification permission denied");
+            }
         }
     } catch (error) {
         console.error("Error getting FCM token:", error);
     }
 }
 
+
+
+    
+
 // 🚀 Handle Authentication & Role-based Redirection
 onAuthStateChanged(auth, async (user) => {
     if (!localStorage.getItem("redirected") && user) {
         const role = await getUserRole(user);
         localStorage.setItem("userRole", role);
-        
-        
+
         try {
             // Show notification prompt and wait for user interaction
             await requestNotificationPermission();
@@ -154,6 +175,7 @@ onAuthStateChanged(auth, async (user) => {
         localStorage.removeItem("redirected");
     }
 });
+
 
 // 🚀 Ensure DOM is Loaded Before Running Event Listeners
 document.addEventListener("DOMContentLoaded", () => {
