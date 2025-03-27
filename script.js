@@ -20,38 +20,24 @@ const auth = getAuth(app);
 const db = getFirestore(app);
 // const messaging = getMessaging(app);
 
-
-// 
-let messaging = null;
-const initializeMessaging = async () => {
-    try {
-        const isMessagingSupported = await isSupported();
-        if (isMessagingSupported) {
-            messaging = getMessaging(app);
-            return true;
-        }
-        console.log('Firebase messaging not supported in this browser');
-        return false;
-    } catch (err) {
-        console.error('Error initializing messaging:', err);
-        return false;
-    }
-};
-
-if ('serviceWorker' in navigator) {
-    (async () => {
-        try {
-            const registration = await navigator.serviceWorker.register('./firebase-messaging-sw.js', {
-                scope: '/'
-            });
-            console.log('Service Worker registered with scope:', registration.scope);
-        } catch (error) {
-            console.error('Service Worker registration failed:', error);
-        }
-    })();
-}
-
-
+// 🚀 Register Service Worker
+if ("serviceWorker" in navigator) {
+        console.log("coming into if");
+        
+    navigator.serviceWorker.register("/firebase-messaging-sw.js")
+    .then(
+      (registration) => {
+        console.log("success");
+        
+        console.log("Service worker registration succeeded:", registration);
+      },
+      (error) => {
+        console.error(`Service worker registration failed: ${error}`);
+      },
+    );
+  } else {
+    console.error("Service workers are not supported.");
+  }
 
 // 🚀 Get User Role Securely from Firestore
 async function getUserRole(user) {
