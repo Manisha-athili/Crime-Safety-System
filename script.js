@@ -18,26 +18,40 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
-const messaging = getMessaging(app);
+// const messaging = getMessaging(app);
 
-// 🚀 Register Service Worker
-if ("serviceWorker" in navigator) {
-        console.log("coming into if");
-        
-    navigator.serviceWorker.register("/firebase-messaging-sw.js")
-    .then(
-      (registration) => {
-        console.log("success");
-        
-        console.log("Service worker registration succeeded:", registration);
-      },
-      (error) => {
-        console.error(`Service worker registration failed: ${error}`);
-      },
-    );
-  } else {
-    console.error("Service workers are not supported.");
-  }
+
+// 
+let messaging = null;
+const initializeMessaging = async () => {
+    try {
+        const isMessagingSupported = await isSupported();
+        if (isMessagingSupported) {
+            messaging = getMessaging(app);
+            return true;
+        }
+        console.log('Firebase messaging not supported in this browser');
+        return false;
+    } catch (err) {
+        console.error('Error initializing messaging:', err);
+        return false;
+    }
+};
+
+if ('serviceWorker' in navigator) {
+    (async () => {
+        try {
+            const registration = await navigator.serviceWorker.register('./firebase-messaging-sw.js', {
+                scope: '/'
+            });
+            console.log('Service Worker registered with scope:', registration.scope);
+        } catch (error) {
+            console.error('Service Worker registration failed:', error);
+        }
+    })();
+}
+
+
 
 // 🚀 Get User Role Securely from Firestore
 async function getUserRole(user) {
@@ -81,6 +95,15 @@ async function saveTokenToFirestore(token) {
 
 // 🚀 Request Notification Permission & Get FCM Token
 async function requestNotificationPermission() {
+
+    // Initialize messaging only once
+    if (!messaging) {
+        if (!await initializeMessaging()) {
+            console.log('Notifications not supported in this browser');
+            return;
+        }
+    }
+
     if (Notification.permission === "denied") {
         console.warn("Notifications are blocked. Please enable them in browser settings.");
         alert("Notifications are blocked. Enable them in your browser settings to receive alerts.");
@@ -109,17 +132,27 @@ onAuthStateChanged(auth, async (user) => {
     if (!localStorage.getItem("redirected") && user) {
         const role = await getUserRole(user);
         localStorage.setItem("userRole", role);
-        localStorage.setItem("redirected", "true");
+        
+        
+        try {
+            // Show notification prompt and wait for user interaction
+            await requestNotificationPermission();
+            localStorage.setItem("redirected", "true");
 
-        if (role === "officer") {
-            window.location.href = "officer.html";
-        } else {
-            document.getElementById("logoutBtn")?.classList.remove("hide-btn");
-            window.location.href = "index.html";
+            // Handle navigation based on role
+            const currentPath = window.location.pathname;
+            if (role === "officer" && !currentPath.includes("officer.html")) {
+                window.location.href = "officer.html";
+            } else if (role !== "officer" && !currentPath.includes("index.html")) {
+                document.getElementById("logoutBtn")?.classList.remove("hide-btn");
+                window.location.href = "index.html";
+            }
+        } catch (error) {
+            console.error("Error handling notifications:", error);
         }
-
-        // 🚀 Request Notification Permission (ONLY if not already blocked)
-        requestNotificationPermission();
+    } else if (!user) {
+        localStorage.removeItem("userRole");
+        localStorage.removeItem("redirected");
     }
 });
 
