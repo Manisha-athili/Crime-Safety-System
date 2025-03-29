@@ -58,13 +58,16 @@ const initializeMessaging = async () => {
 if ('serviceWorker' in navigator) {
     (async () => {
         try {
-            const registration = await navigator.serviceWorker.register('/Crime-Safety-System/firebase-messaging-sw.js', { scope: '/Crime-Safety-System/' });
+            const registration = await navigator.serviceWorker.register('./firebase-messaging-sw.js', {
+                scope: '/'
+            });
             console.log('Service Worker registered with scope:', registration.scope);
         } catch (error) {
             console.error('Service Worker registration failed:', error);
         }
     })();
 }
+
 
 
 // 🚀 Get User Role Securely from Firestore
