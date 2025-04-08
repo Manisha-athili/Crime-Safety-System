@@ -1,6 +1,6 @@
-import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
-import { getFirestore, collection, getDocs, orderBy, query, limit, startAfter, where } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
-import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-app.js";
+import { getFirestore, collection, getDocs, orderBy, query, limit, startAfter, where } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-firestore.js";
+import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-auth.js";
 
 // Firebase configuration
 const firebaseConfig = {
@@ -29,7 +29,7 @@ const prevBtn = document.getElementById("prevPageBtn");
 let lastVisible = null;
 const pageSize = 4; // Increased for better UX
 let currentPage = 1;
-let totalReports = 0;
+// let totalReports = 0;
 
 // Default images mapping
 const DEFAULT_IMAGES = {
@@ -152,7 +152,7 @@ async function loadAllReports(direction = null) {
 
 function updatePaginationButtons(resultsCount) {
 
-prevBtn.disabled = currentPage === 1 && totalReports != 0;
+prevBtn.disabled = currentPage === 1;
     nextBtn.disabled = resultsCount < pageSize;
 }
 
@@ -184,17 +184,36 @@ if (nextBtn && prevBtn) {
 }
 
 // Ensure the user is authenticated before loading reports
+const reportbtn = document.getElementById("reportacrime");
 onAuthStateChanged(auth, (user) => {
     if (user) {
         loadAllReports();
     } else {
         allReportsContainer.innerHTML = `
             <p class="message">You need to be logged in to view crime reports.</p>
-            <a href="../../loginIn/login.html" class="btn btn-primary" style="margin: 0 auto;">Login</a>
+            <a href="../../ loginIn/login.html" class="btn btn-primary" style="margin: 0 auto;">Login</a>
+
         `;
+        if(reportbtn){reportbtn.style.display = "none"}
         if (nextBtn && prevBtn) {
             nextBtn.disabled = true;
             prevBtn.disabled = true;
         }
     }
+});
+
+document.addEventListener("DOMContentLoaded", () => {
+    const authButton = document.getElementById("authButton");
+
+    onAuthStateChanged(auth, user => {
+        if (authButton) {
+            if (user) {
+                authButton.textContent = "My Profile";
+                authButton.href = "./profile/profile.html";
+            } else {
+                authButton.textContent = "Login / Signup";
+                authButton.href = "../../loginIn/login.html";
+            }
+        }
+    });
 });
