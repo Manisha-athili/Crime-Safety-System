@@ -218,7 +218,10 @@
 
     .paginationControls{
         display: flex;
-        justify-content: space-between;
+        gap: 15px;
+        justify-content: center;
+        margin-bottom: 30px;
+        flex-wrap: wrap;
     }
     
     /* Location Button */
