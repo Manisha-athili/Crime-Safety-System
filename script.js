@@ -1,9 +1,8 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
-import { getAuth, signOut, onAuthStateChanged , setPersistence, browserLocalPersistence } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
+import { getAuth, onAuthStateChanged, setPersistence, browserLocalPersistence } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
 import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js";
 
-
-// 🚀 Firebase Config
+//  Firebase Config
 const firebaseConfig = {
     apiKey: "AIzaSyBsJS-phFoPIzSEtjdr0Y9lZ-J79XpKjV8",
     authDomain: "crime-and-safety.firebaseapp.com",
@@ -14,28 +13,29 @@ const firebaseConfig = {
     measurementId: "G-QRL88H2M6Q"
 };
 
-// 🚀 Initialize Firebase
+//  Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
 
-// / Set authentication persistence (keeps users logged in)
+// Set authentication persistence (keeps users logged in)
 setPersistence(auth, browserLocalPersistence)
     .then(() => console.log("Auth persistence enabled"))
     .catch((error) => console.error("Error setting persistence:", error));
 
-
-
-//  Get User Role Securely from Firestore
+// Get User Role Securely from Firestore
 async function getUserRole(user) {
-    if (!user) return null;
-    const userRef = doc(db, "users", user.uid);
-    const userSnap = await getDoc(userRef);
-    return userSnap.exists() ? userSnap.data().role : null;
+    try {
+        const userRef = doc(db, "users", user.uid);
+        const userSnap = await getDoc(userRef);
+        return userSnap.exists() ? userSnap.data().role : "user"; // Default role
+    } catch (error) {
+        console.error("Failed to fetch role:", error);
+        return "user"; // Fallback
+    }
 }
 
-
-//  Crime Report function
+// Crime Report function
 async function report() {
     try {
         const user = auth.currentUser;
@@ -54,16 +54,16 @@ async function report() {
     }
 }
 
-//  Add event listener when DOM loads
+// Add event listener when DOM loads
 document.addEventListener("DOMContentLoaded", function() {
     const reportButton = document.getElementById("crimeReport");
-    reportButton.addEventListener("click", function(e) {
-        e.preventDefault();
-        report();
-    });
+    if (reportButton) {
+        reportButton.addEventListener("click", function(e) {
+            e.preventDefault();
+            report();
+        });
+    }
 });
-
-
 
 // Handle Authentication & Role-based Redirection
 onAuthStateChanged(auth, async (user) => {
@@ -72,7 +72,7 @@ onAuthStateChanged(auth, async (user) => {
     if (user) {
         // Prevent logged-in users from accessing the login page
         if (currentPath.includes("login.html")) {
-            window.location.href = "index.html";
+            window.location.href = "./index.html";
             return;
         }
 
@@ -81,15 +81,13 @@ onAuthStateChanged(auth, async (user) => {
             localStorage.setItem("userRole", role);
 
             try {
-                
                 localStorage.setItem("redirected", "true");
 
                 // Redirect based on role
                 if (role === "officer" && !currentPath.includes("officer.html")) {
-                    window.location.href = "officer.html";
-                } else if (role !== "officer" && !currentPath.includes("index.html")) {
-                    document.getElementById("logoutBtn")?.classList.remove("hide-btn");
-                    window.location.href = "index.html";
+                    window.location.href = "./officerDasboard/officerDashboard.html";
+                } else if (role !== "officer" && currentPath.includes("officer.html")) {
+                    window.location.href = "./index.html";
                 }
             } catch (error) {
                 console.error("Error handling", error);
@@ -102,11 +100,8 @@ onAuthStateChanged(auth, async (user) => {
 
         // Redirect unauthenticated users from restricted pages
         if (currentPath.includes("profile.html") || currentPath.includes("crime-report.html")) {
-            window.location.href = "loginIn/login.html";
+            window.location.href = "./loginIn/login.html";
         }
     }
 });
-
-// My profile or Login is in 
-
 

@@ -278,11 +278,11 @@ function createReportCard(doc, container) {
     else if (data.status?.toLowerCase().includes("resolve")) statusClass = "status-resolved";
 
     const DEFAULT_IMAGES = {
-        'Theft': '/asserts/Theft.jpg',
-        'Vandalism': '/asserts/Vandalism.jpg',
-        'Assault': '/asserts/Assault.jpeg',
-        'Fraud': '/asserts/Fraud.jpeg',
-        'Other': '/asserts/other.jpeg'
+        'Theft': '../../asserts/Theft.jpg',
+        'Vandalism': '../../asserts/Vandalism.jpg',
+        'Assault': '../../asserts/Assault.jpeg',
+        'Fraud': '../../asserts/Fraud.jpeg',
+        'Other': '../../asserts/other.jpeg'
     };
 
     reportCard.innerHTML = `
