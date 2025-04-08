@@ -209,7 +209,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if (authButton) {
             if (user) {
                 authButton.textContent = "My Profile";
-                authButton.href = "./profile/profile.html";
+                authButton.href = "../../profile/profile.html";
             } else {
                 authButton.textContent = "Login / Signup";
                 authButton.href = "../../loginIn/login.html";

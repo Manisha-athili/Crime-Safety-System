@@ -39,8 +39,8 @@ const crimeTypeFilter = document.getElementById('crimeTypeFilter');
 
 // Global Variables
 let map;
-let currentCaseId = null;
 let currentOfficerId = null;
+let currentCaseId = null;
 let heatmapLayer = null;
 let markers = [];
 
@@ -74,17 +74,27 @@ function initMap() {
 
 // Load Recent Cases
 async function loadRecentCases() {
-    const q = query(collection(db, "crimeReports"), orderBy("timestamp", "desc"), limit(5));
-    const querySnapshot = await getDocs(q);
-    
-    recentCasesContainer.innerHTML = '';
-    markers = [];
-    
-    querySnapshot.forEach((doc) => {
-        const data = doc.data();
-        createCaseCard(doc.id, data);
-        addMarkerToMap(doc.id, data);
-    });
+    try {
+        const q = query(collection(db, "crimeReports"), orderBy("timestamp", "desc"), limit(5));
+        const querySnapshot = await getDocs(q);
+        
+        recentCasesContainer.innerHTML = '';
+        markers = [];
+        
+        if (querySnapshot.empty) {
+            recentCasesContainer.innerHTML = '<div class="case-item"><p>No recent cases found.</p></div>';
+            return;
+        }
+        
+        querySnapshot.forEach((doc) => {
+            const data = doc.data();
+            createCaseCard(doc.id, data);
+            addMarkerToMap(doc.id, data);
+        });
+    } catch (error) {
+        console.error("Error loading recent cases:", error);
+        recentCasesContainer.innerHTML = '<div class="case-item"><p>Error loading cases. Please try again.</p></div>';
+    }
 }
 
 // Create Case Card
@@ -93,15 +103,20 @@ function createCaseCard(id, data) {
     caseItem.className = 'case-item';
     caseItem.dataset.id = id;
     
+    // Safer timestamp handling
+    const timestamp = data.timestamp?.toDate ? 
+        new Date(data.timestamp.toDate()).toLocaleString() : 
+        "Unknown date";
+    
     caseItem.innerHTML = `
         <div class="case-header">
-            <h3 class="case-title">${data.crimeType}</h3>
-            <span class="case-status status-${data.status.replace(' ', '-')}">${data.status}</span>
+            <h3 class="case-title">${data.crimeType || "Unknown"}</h3>
+            <span class="case-status status-${(data.status || "pending").replace(' ', '-')}">${data.status || "Pending"}</span>
         </div>
-        <p>${data.description.substring(0, 100)}...</p>
+        <p>${(data.description || "No description").substring(0, 100)}...</p>
         <div class="case-meta">
-            <span><i class="fas fa-map-marker-alt"></i> ${data.location}</span>
-            <span><i class="far fa-clock"></i> ${new Date(data.timestamp?.toDate()).toLocaleString()}</span>
+            <span><i class="fas fa-map-marker-alt"></i> ${data.location || "Unknown location"}</span>
+            <span><i class="far fa-clock"></i> ${timestamp}</span>
         </div>
     `;
     
@@ -129,6 +144,20 @@ async function openCaseModal(id, data) {
     currentCaseId = id;
     const caseDoc = await getDoc(doc(db, "crimeReports", id));
     const caseData = caseDoc.data();
+
+// Default images mapping
+const DEFAULT_IMAGES = {
+    'Theft': '../../asserts/Theft.jpg',
+    'Vandalism': '../../asserts/Vandalism.jpg',
+    'Assault': '../../asserts/Assault.jpeg',
+    'Fraud': '../../asserts/Fraud.jpeg',
+    'Other': '../../asserts/other.jpeg'
+};
+
+
+const imageHTML = caseData.image ? 
+`<img src="${caseData.image}" alt="Crime scene photo" height = "200px" width = "600px">` : 
+`<img src="${DEFAULT_IMAGES[caseData.crimeType] || DEFAULT_IMAGES['Other']}" alt="Default crime illustration" class="default-image"  height= "200px" width = "600px">`;
     
     modalCaseContent.innerHTML = `
         <div class="case-detail">
@@ -140,7 +169,7 @@ async function openCaseModal(id, data) {
             <p><strong>Reported on:</strong> ${new Date(caseData.timestamp?.toDate()).toLocaleString()}</p>
             <p><strong>Status:</strong> <span class="case-status status-${caseData.status.replace(' ', '-')}">${caseData.status}</span></p>
         </div>
-        ${caseData.image ? `<div class="case-image"><img src="${caseData.image}" alt="Crime scene"></div>` : ''}
+        ${imageHTML}
     `;
     
     statusUpdateSelect.value = caseData.status.toLowerCase().replace(' ', '-');
@@ -168,6 +197,12 @@ async function updateCaseStatus() {
 
 // Toggle Heatmap
 function toggleHeatmap() {
+    // First check if the L.heatLayer function exists
+    if (!window.L.heatLayer) {
+        alert("Heatmap plugin not loaded. Please add the Leaflet.heat library to your HTML.");
+        return;
+    }
+    
     if (heatmapLayer) {
         map.removeLayer(heatmapLayer);
         heatmapLayer = null;
@@ -175,11 +210,15 @@ function toggleHeatmap() {
     } else {
         const points = markers.map(marker => {
             const latLng = marker.getLatLng();
-            return { lat: latLng.lat, lng: latLng.lng, value: 1 };
+            return [latLng.lat, latLng.lng, 1]; // Format needed by heatLayer
         });
         
-        heatmapLayer = L.heatLayer(points, { radius: 25 }).addTo(map);
-        heatmapToggle.innerHTML = '<i class="fas fa-times"></i> Hide Heatmap';
+        if (points.length > 0) {
+            heatmapLayer = L.heatLayer(points, { radius: 25 }).addTo(map);
+            heatmapToggle.innerHTML = '<i class="fas fa-times"></i> Hide Heatmap';
+        } else {
+            alert("No crime locations available for heatmap");
+        }
     }
 }
 
@@ -376,6 +415,7 @@ onAuthStateChanged(auth, async (user) => {
         if (userDoc.exists()) {
             console.log("User doc exists, role:", userDoc.data().role);
         } else {
+
             console.log("User doc doesn't exist in Firestore");
             // Create it
             await setDoc(doc(db, "users", user.uid), {
