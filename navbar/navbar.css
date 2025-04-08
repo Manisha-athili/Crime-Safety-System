@@ -1,0 +1,86 @@
+ 
+ /* Base Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+
+body {
+    background-color: #0e0627;
+    color: white;
+    overflow-x: hidden;
+}
+        /* Header and Navigation */
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 80px;
+}
+
+.logo {
+    font-size: 24px;
+    font-weight: bold;
+    color: white;
+    text-decoration: none;
+}
+
+nav {
+    display: flex;
+    align-items: center;
+}
+
+nav ul {
+    display: flex;
+    list-style: none;
+}
+
+nav ul li {
+    margin: 0 15px;
+}
+
+nav ul li a {
+    color: white;
+    text-decoration: none;
+    font-size: 16px;
+    position: relative;
+    padding-bottom: 5px;
+    transition: color 0.3s;
+}
+
+nav ul li a:hover {
+    color: #ff6b3d;
+}
+
+nav ul li a::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background-color: #ff6b3d;
+    transition: width 0.3s;
+}
+
+nav ul li a:hover::after {
+    width: 100%;
+}
+
+nav ul li:nth-child(1) a::after,
+nav ul li:nth-child(5) a::after,
+nav ul li:nth-child(6) a::after {
+    content: "";
+}
+
+.cta-button {
+    background-color: #ff6537;
+    color: white;
+    padding: 12px 20px;
+    border-radius: 30px;
+    text-decoration: none;
+    font-weight: 500;
+    margin-left: 20px;
+}

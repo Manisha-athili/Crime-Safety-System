@@ -4,15 +4,80 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>All Crime Reports</title>
+    <link rel="stylesheet" href="allReports.css">
+    <link rel="stylesheet" href="../../navbar/navbar.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+
+    <!-- font assome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
 <body>
+   
+    <div class="bg-pattern"></div>
+    
+    <!-- Header and Navigation -->
+    <header>
+        <a href="../index.html" class="logo">Crime and Safety Reporting System</a>
+        <nav>
+            <ul>
+                <li><a href="/index.html">Home</a></li>
+                <li><a href="/crime-safety/all_Reports/allReports.html">All Reports</a></li>
+                <li><a href="/map/map.html">Crime Map</a></li>
+                <li><a href="/pages/aboutUs.html">About Us</a></li>
+                <li><a href="/pages/contactUs.html">Contact</a></li>
+            </ul>
+            <a href="" class="cta-button" id="authButton">My Profile</a>
+        </nav>
+    </header>
+    <!-- <a href=""></a> -->
+    
+    <!-- Main Content -->
+    <div class="main-container">
+        <h1 class="page-header">All Reported Crimes</h1>
+        
+        <!-- Filter Controls -->
+        <div class="filter-controls">
+            <select id="crimeTypeFilter">
+                <option value="">All Crime Types</option>
+                <option value="Theft">Theft</option>
+                <option value="Vandalism">Vandalism</option>
+                <option value="Assault">Assault</option>
+                <option value="Fraud ">Fraud</option>
+                <option value="Other">Other</option>
+            </select>
+            <select id="statusFilter">
+                <option value="">All Statuses</option>
+                <option value="Reported">Reported</option>
+                <option value="Investigating">pending</option>
+                <option value="Resolved">Resolved</option>
+            </select>
+            <input type="text" id="locationFilter" placeholder="Filter by location...">
+        </div>
+        
+        <!-- Reports Grid -->
+        <div class="reports-grid" id="allReportsContainer">
+            <!-- Reports will be loaded here dynamically -->
+            <p class="message">Loading crime reports...</p>
+        </div>
+        
+        <!-- Pagination Controls -->
+        <div class="pagination" id="paginationControls">
+            <!-- Pagination buttons will be dynamically added here -->
+        </div>
 
-    <h2>All Reported Crimes</h2>
-    <div id="allReportsContainer"></div>
-    <button onclick="window.location.href='../index.html'">Back to Home</button>
+        <!-- Action Buttons -->
+        <div class="action-buttons">
+            <a href="../../index.html" class="btn btn-secondary">Back to Home</a>
+                <div id="paginationControls">
+                    <button id="prevPageBtn" class="btn" disabled><i class="fa fa-arrow-left" aria-hidden="true"></i></button>
+                    <button id="nextPageBtn" class="btn" ><i class="fa fa-arrow-right" aria-hidden="true"></i></button>
+                </div>
+            <a href="../crime-report.html" class="btn btn-primary">Report a Crime</a>
+        </div>
+    </div>
 
     <script type="module" src="allReports.js"></script>
+    <script type="module" src="/navbar/login_Or_profile.js"></script>
 
 </body>
 </html>

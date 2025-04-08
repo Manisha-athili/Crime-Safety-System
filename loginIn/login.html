@@ -8,20 +8,40 @@
    <link rel="stylesheet" href="login.css">
 </head>
 <body>
-  <div class="login-container">
-      <h2>Sign In</h2>
-      <div class="input-box">
-        <input type="email" name="" id="email" placeholder="Email">
+
+  <div class="main-container">
+    <!-- Left Side - Form -->
+    <div class="form-container">
+        <div class="form-header">
+          <h2>LogIn</h2>
+          <p>Join our community safety network</p>
+        </div>
+        <div class="input-box">
+          <input type="email" id="email" placeholder="Email">
+        </div>
+        <div class="input-box">
+          <input type="password" id="password" placeholder="password">
+        </div>
+        
+        <button type="submit" id="login" class="login-btn">Login in</button>
+    
+        <div class="links">
+        <p  class="create-account">No Acount ? <a href="../signUp/signUp.html">Signup Here</a></p>
+        <br>
+        <p id="message" style="color: red;"></p> 
       </div>
-      <div class="input-box"><input type="password" name="" id="password" placeholder="password"></div>
-      
-      <button type="submit" id="signin" class="login-btn">Sign in</button>
-  
-      <p  class="create-account">No Acount ? <a href="../signUp/signUp.html">Signup Here</a></p>
-      <a href="/index.html"></a>
-      <br>
-      <p id="message" style="color: red;"></p> 
     </div>
+
+    <!-- Right Side - Image -->
+    <div class="image-container">
+      <div class="image-content">
+        <h3>Community Safety Starts With You</h3>
+        <p>By registering, you'll gain access to real-time crime alerts, safety resources, and the ability to report incidents in your neighborhood.</p>
+        <p>Help make your community safer for everyone.</p>
+      </div>
+    </div>
+  </div>
+
 
 <!-- <a href="../officers/officer.html"></a> -->
 

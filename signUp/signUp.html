@@ -9,26 +9,52 @@
 </head>
 
 <body>
+  <div class="bg-pattern"></div>
+  
+  <div class="main-container">
+    <!-- Left Side - Form -->
+    <div class="form-container">
+      <div class="form-header">
+        <h2>Create An Account</h2>
+        <p>Join our community safety network</p>
+      </div>
+      
+      <div class="input-box">
+        <input type="email" id="email" placeholder="Email">
+      </div>
+      <div class="input-box">
+        <input type="password" id="password" placeholder="Password">
+      </div>
+      
+      <button type="submit" id="signup" class="login-btn">Sign Up</button> 
+      
+      <div class="links">
+        <p id="acc">Already have an account? <a href="../loginIn/login.html">Login here</a></p>
+        <p>or continue as</p>
+        <button type="submit" id="guestLogin" class="login-btn">Guest User</button>
+        <br>
+        <p id="message" style="color: red;"></p>
+      </div>
+    </div>
+    
+    <!-- Right Side - Image -->
+    <div class="image-container">
+      <div class="image-content">
+        <h3>Community Safety Starts With You</h3>
+        <p>By registering, you'll gain access to real-time crime alerts, safety resources, and the ability to report incidents in your neighborhood.</p>
+        <p>Help make your community safer for everyone.</p>
+      </div>
+    </div>
+  </div>
 
-  <div class="login-container">
-  <h2>Create An Acount</h2>
-  <div class="input-box">
-    <input type="email" name="" id="email" placeholder="Email">
-  </div>
-  <div class="input-box">
-    <input type="password" name="" id="password" placeholder="password">
-  </div>
-    <button type="submit" id="signin1" class="login-btn">Sign Up</button> 
-    <div class="links">
-    <p id="acc">Already have an Acount? <a href="../loginIn/login.html">Login here</a></p>
-    <p>
-    <button type="submit" id="guestLogin" class="login-btn">Guest Login</button></p>
-    <br>
-    <p id="message" style="color: red;"></p>
-  </div>
-  </div>
-  <script src="signUp.js" type="module"></script> 
-  <!-- <a href=""></a> -->
+  
 
+
+  <script src="signUp.js" type="module"></script>
+  <!-- scripts for mail from EmailJs -->
+  <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
+  <script>
+    emailjs.init("W0J441OUjBgt5YDQx"); 
+  </script>
 </body>
 </html>

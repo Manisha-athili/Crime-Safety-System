@@ -1,79 +1,213 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Crime Reports Map</title>
-    <!-- Leaflet CSS -->
-    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
-    <!-- css  -->
-    <link rel="stylesheet" href="map.css">
+  <title>Crime Reports Map</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <link rel="stylesheet" href="/navbar/navbar.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+  <style>
+    #map { 
+        height: 70vh; 
+        width: 100%; 
+        margin-bottom: 1rem; 
+    }
+    .filter-controls {
+        display: flex;
+        gap: 15px;
+        justify-content: center;
+        margin: 30px;
+        flex-wrap: wrap;
+    }
+    .filter-controls  select, .filter-controls  input {
+        padding: 10px 15px;
+        border-radius: 5px;
+        border: 1px solid #3185fc;
+        background-color: rgba(255, 255, 255, 0.1);
+        color: white;
+        font-size: 0.9rem;
+        min-width: 200px;
+    }
+
     
-</head>
-<body>
-    <div id="map"></div>
+    #pagination { 
+        text-align: center; 
+        margin-top: 10px; 
+    }
+    .page-btn { 
+        margin: 0 5px; 
+        cursor: pointer; 
+        padding: 5px 10px; 
+        border: 1px solid #333; 
+    }
+  </style>
 
-    <!-- Leaflet JS -->
-    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-    <!-- Firebase App (the core Firebase SDK) -->
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
-    <!-- Firebase Firestore -->
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js"></script>
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+  <script src="https://unpkg.com/leaflet.heat/dist/leaflet-heat.js"></script>
+  <script type="module">
 
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
+    import { initializeApp , getApps } from 'https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js';
+    import { getFirestore, collection, getDocs } from 'https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js';
+    import { getAuth } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
 
 
-    <script type="module">
-        // Your Firebase configuration 
-        const firebaseConfig = {
-            apiKey: "AIzaSyBsJS-phFoPIzSEtjdr0Y9lZ-J79XpKjV8",
-            authDomain: "crime-and-safety.firebaseapp.com",
-            projectId: "crime-and-safety",
-            storageBucket: "crime-and-safety.appspot.com",
-            messagingSenderId: "167045576983",
-            appId: "1:167045576983:web:4b19f62d9f0268af565f52"
+    const firebaseConfig = {
+      apiKey: "AIzaSyBsJS-phFoPIzSEtjdr0Y9lZ-J79XpKjV8",
+      authDomain: "crime-and-safety.firebaseapp.com",
+      projectId: "crime-and-safety",
+      storageBucket: "crime-and-safety.appspot.com",
+      messagingSenderId: "167045576983",
+      appId: "1:167045576983:web:4b19f62d9f0268af565f52"
+    };
+
+    const app = getApps().length ? getApps()[0] : initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    const auth = getAuth(app);
+
+
+    const map = L.map('map').setView([17.3850, 78.4867], 12);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; OpenStreetMap contributors'
+    }).addTo(map);
+
+    const filters = {
+      crimeType: '',
+      status: '',
+      search: ''
+    };
+
+    let allReports = [], filteredReports = [], markers = [], heatLayer;
+    const reportsPerPage = 10;
+    let currentPage = 1;
+
+    const fetchData = async () => {
+      const snapshot = await getDocs(collection(db, "crimeReports"));
+      allReports = snapshot.docs.map(doc => doc.data());
+      applyFilters();
+    };
+
+    const applyFilters = () => {
+      filteredReports = allReports.filter(report => {
+        return (!filters.crimeType || report.crimeType === filters.crimeType) &&
+               (!filters.status || report.status === filters.status) &&
+               (!filters.search || report.location.toLowerCase().includes(filters.search.toLowerCase()) || report.description.toLowerCase().includes(filters.search.toLowerCase()));
+      });
+      currentPage = 1;
+      renderMap();
+    };
+
+    const renderMap = () => {
+      markers.forEach(marker => map.removeLayer(marker));
+      markers = [];
+      if (heatLayer) map.removeLayer(heatLayer);
+
+      const start = (currentPage - 1) * reportsPerPage;
+      const pageData = filteredReports.slice(start, start + reportsPerPage);
+
+      const heatPoints = [];
+      pageData.forEach(data => {
+        if (data.lat && data.lon) {
+          const marker = L.marker([data.lat, data.lon]).addTo(map);
+          markers.push(marker);
+          marker.bindPopup(`
+            <div>
+              <h3>${data.crimeType}</h3>
+              <p><strong>Description:</strong> ${data.description}</p>
+              <p><strong>Location:</strong> ${data.location}</p>
+              <p><strong>Date & Time:</strong> ${data.datetime}</p>
+              <p><strong>Status:</strong> ${data.status}</p>
+              ${data.image ? `<img src="${data.image}" alt="Crime Image" style="width:100%;max-width:200px;">` : ''}
+            </div>
+          `);
+          heatPoints.push([data.lat, data.lon, 1]);
+        }
+      });
+
+      heatLayer = L.heatLayer(heatPoints, { radius: 25 }).addTo(map);
+      renderPagination();
+    };
+
+    const renderPagination = () => {
+      const totalPages = Math.ceil(filteredReports.length / reportsPerPage);
+      const pagination = document.getElementById("pagination");
+      pagination.innerHTML = '';
+      for (let i = 1; i <= totalPages; i++) {
+        const btn = document.createElement("span");
+        btn.className = "page-btn";
+        btn.textContent = i;
+        if (i === currentPage) btn.style.fontWeight = "bold";
+        btn.onclick = () => {
+          currentPage = i;
+          renderMap();
         };
+        pagination.appendChild(btn);
+      }
+    };
 
-        // Initialize Firebase
-        const app = firebase.initializeApp(firebaseConfig);
-        const db = firebase.firestore(app);
-        const auth = firebase.auth();
+    window.onload = () => {
+      document.getElementById("crimeType").addEventListener("change", e => {
+        filters.crimeType = e.target.value;
+        applyFilters();
+      });
+      document.getElementById("status").addEventListener("change", e => {
+        filters.status = e.target.value;
+        applyFilters();
+      });
+      document.getElementById("search").addEventListener("input", e => {
+        filters.search = e.target.value;
+        applyFilters();
+      });
+      fetchData();
+    };
+  </script>
+</head>
 
-        // Initialize the map centered on Hyderabad
-        const map = L.map('map').setView([17.3850, 78.4867], 12);
 
-        // Add OpenStreetMap tiles
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-        }).addTo(map);
+<body>
+    <!-- Header and Navigation -->
 
-        // Fetch crime reports from Firestore
-        db.collection("crimeReports").get().then((querySnapshot) => {
-            querySnapshot.forEach((doc) => {
-                const data = doc.data();
-                if (data.lat && data.lon) {
-                    // Create a marker for each crime report
-                    const marker = L.marker([data.lat, data.lon]).addTo(map);
-                    
-                    // Create a popup with crime details
-                    const popupContent = `
-                        <div>
-                            <h3>${data.crimeType}</h3>
-                            <p><strong>Description:</strong> ${data.description}</p>
-                            <p><strong>Location:</strong> ${data.location}</p>
-                            <p><strong>Date & Time:</strong> ${data.datetime}</p>
-                            <p><strong>Status:</strong> ${data.status}</p>
-                            ${data.image ? `<img src="${data.image}" alt="Crime Image" style="width:100%;max-width:200px;">` : ''}
-                        </div>
-                    `;
-                    marker.bindPopup(popupContent);
-                }
-            });
-        }).catch((error) => {
-            console.error("Error fetching crime reports: ", error);
-        });
-    </script>
+    <header>
+        <a href="#" class="logo">Crime and Safety Reporting System</a>
+        <nav>
+              <div class="menu-toggle" id="mobile-menu">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+            <ul class="nav-menu">
+                <li><a href="/index.html">Home</a></li>
+                <li><a href="/crime-safety/all_Reports/allReports.html">All Reports</a></li>
+                <li><a href="/map/map.html">Crime Map</a></li>
+                <li><a href="/pages/aboutUs.html">About Us</a></li>
+                <li><a href="/pages/contactUs.html">Contact Us</a></li>
+
+            </ul>
+            <a href="/profile/profile.html" class="cta-button" id="authButton">My Profile</a>
+        </nav>
+    </header>
+
+  <div id="filters" class="filter-controls ">
+    <select id="crimeType">
+      <option value="">All Crime Types</option>
+      <option value="Theft">Theft</option>
+      <option value="Assault">Assault</option>
+      <option value="Vandalism">Vandalism</option>
+      <option value="Fraud">Fraud/option>
+      <option value="Other">Other</option>
+    </select>
+    <select id="status">
+      <option value="">All Status</option>
+      <option value="Pending">Pending</option>
+      <option value="Resolved">Resolved</option>
+    </select>
+    <input type="text" id="search" placeholder="Search location or description">
+  </div>
+
+  <div id="map"></div>
+  <div id="pagination"></div>
+
+   <!-- login_Or_profile button login -->
+   <script src="/navbar/login_Or_profile.js" type="module"></script>
 </body>
 </html>

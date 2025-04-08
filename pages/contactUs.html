@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../navbar/navbar.css">
+    <title>Contact Us - Crime and Safety Reporting System</title>
+    <style>
+        /* Reset and Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #0e0627;
+            color: white;
+            overflow-x: hidden;
+        }
+        
+        /* Background pattern */
+        .bg-pattern {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: radial-gradient(rgba(59, 70, 218, 0.1) 1px, transparent 1px);
+            background-size: 20px 20px;
+            z-index: -1;
+            opacity: 0.5;
+        }
+        
+        
+        /* Contact Section */
+        .contact-section {
+            max-width: 1200px;
+            margin: 50px auto;
+            padding: 0 80px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 50px;
+        }
+        
+        .contact-info {
+            flex: 1;
+            min-width: 300px;
+        }
+        
+        .contact-form {
+            flex: 1;
+            min-width: 300px;
+        }
+        
+        .contact-section h1 {
+            font-size: 36px;
+            margin-bottom: 30px;
+            color: #ff6537;
+            width: 100%;
+        }
+        
+        .contact-section h2 {
+            font-size: 24px;
+            margin: 25px 0 15px;
+            color: #3185fc;
+        }
+        
+        .contact-section p {
+            line-height: 1.6;
+            margin-bottom: 20px;
+            color: #cccccc;
+        }
+        
+        .contact-details {
+            margin-top: 30px;
+        }
+        
+        .contact-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .contact-icon {
+            width: 50px;
+            height: 50px;
+            background-color: rgba(49, 133, 252, 0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            font-size: 20px;
+        }
+        
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        label {
+            margin-bottom: 8px;
+            color: #cccccc;
+        }
+        
+        input, textarea {
+            padding: 12px 15px;
+            border-radius: 5px;
+            border: 1px solid #3185fc;
+            background-color: rgba(255, 255, 255, 0.1);
+            color: white;
+            font-size: 16px;
+        }
+        
+        textarea {
+            min-height: 150px;
+            resize: vertical;
+        }
+        
+        .submit-btn {
+            background-color: #ff6537;
+            color: white;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 30px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            align-self: flex-start;
+            transition: background-color 0.3s;
+        }
+        
+        .submit-btn:hover {
+            background-color: #e0552b;
+        }
+        
+        .emergency-notice {
+            background-color: rgba(255, 101, 55, 0.2);
+            padding: 20px;
+            border-left: 4px solid #ff6537;
+            margin-top: 30px;
+        }
+        
+    </style>
+</head>
+<body>
+    <div class="bg-pattern"></div>
+    
+    <!-- Header and Navigation -->
+    <header>
+        <a href="#" class="logo">Crime and Safety Reporting System</a>
+        <nav>
+            <ul>
+                <li><a href="/index.html">Home</a></li>
+                <li><a href="/crime-safety/all_Reports/allReports.html">All Reports</a></li>
+                <li><a href="/map/map.html">Crime Map</a></li>
+                <li><a href="/pages/aboutUs.html">About Us</a></li>
+                <li><a href="/pages/contactUs.html">Contact</a></li>
+            </ul>
+            <a href="#" class="cta-button" id="authButton">My Profile</a>
+        </nav>
+    </header>
+    
+    <!-- Contact Section -->
+    <section class="contact-section">
+        <div class="contact-info">
+            <h2>Get In Touch</h2>
+            <p>Have questions, suggestions, or need assistance with our crime reporting system? Our team is here to help you.</p>
+            
+            <div class="contact-details">
+                <div class="contact-item">
+                    <div class="contact-icon">📧</div>
+                    <div>
+                        <h3>Email</h3>
+                        <p>safetyreport2025@gmail.com</p>
+                    </div>
+                </div>
+                
+                <div class="contact-item">
+                    <div class="contact-icon">📱</div>
+                    <div>
+                        <h3>Phone</h3>
+                        <p>+1 (800) 555-1234</p>
+                    </div>
+                </div>
+                
+                <div class="contact-item">
+                    <div class="contact-icon">🏢</div>
+                    <div>
+                        <h3>Headquarters</h3>
+                        <p>123 Safety Plaza<br>Security City, SC 12345</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="emergency-notice">
+                <h3>Emergency Notice</h3>
+                <p>If you need to report a crime in progress or have an emergency, please call 911 or your local emergency number immediately. This contact form is not monitored 24/7.</p>
+            </div>
+        </div>
+        
+        <div class="contact-form">
+            <h2>Send Us a Message</h2>
+            <form>
+                <div class="form-group">
+                    <label for="name">Your Name</label>
+                    <input type="text" id="name" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <input type="email" id="email" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="subject">Subject</label>
+                    <input type="text" id="subject" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="message">Your Message</label>
+                    <textarea id="message" required></textarea>
+                </div>
+                
+                <button type="submit" class="submit-btn">Send Message</button>
+            </form>
+        </div>
+        
+        
+    </section>
+    <!-- login_Or_profile button login -->
+    <script src="/navbar/login_Or_profile.js" type="module"></script>
+</body>
+</html>

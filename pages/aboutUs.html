@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us - Crime and Safety Reporting System</title>
+    <link rel="stylesheet" href="../navbar/navbar.css">
+    <style>
+        /* Reset and Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #0e0627;
+            color: white;
+            overflow-x: hidden;
+        }
+        
+        /* Background pattern */
+        .bg-pattern {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: radial-gradient(rgba(59, 70, 218, 0.1) 1px, transparent 1px);
+            background-size: 20px 20px;
+            z-index: -1;
+            opacity: 0.5;
+        }
+        
+        /* About Section */
+        .about-section {
+            max-width: 1200px;
+            margin: 50px auto;
+            padding: 0 80px;
+        }
+        
+        .about-section h1 {
+            font-size: 36px;
+            margin-bottom: 30px;
+            color: #ff6537;
+        }
+        
+        .about-section h2 {
+            font-size: 24px;
+            margin: 25px 0 15px;
+            color: #3185fc;
+        }
+        
+        .about-section p {
+            line-height: 1.6;
+            margin-bottom: 20px;
+            color: #cccccc;
+        }
+        
+        .features {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+            margin: 40px 0;
+        }
+        
+        .feature-card {
+            flex: 1 1 300px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            padding: 25px;
+            border-top: 3px solid #3185fc;
+        }
+        
+        .feature-card h3 {
+            margin-bottom: 15px;
+            color: white;
+        }
+        
+        /* Statistics Section */
+        .stats-section {
+            color: white;
+            padding: 4rem 2rem;
+            margin: 4rem 0;
+        }
+        
+        .stats-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .stats-title {
+            text-align: center;
+            margin-bottom: 3rem;
+            font-size: 2rem;
+            position: relative;
+            padding-bottom: 1rem;
+        }
+        
+        .stats-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 3px;
+            background-color: #63b3ed;
+            border-radius: 5px;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            text-align: center;
+        }
+        
+        .stat-item {
+            padding: 1.5rem;
+            position: relative;
+        }
+        
+        .stat-item::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            right: 0;
+            transform: translateY(-50%);
+            width: 1px;
+            height: 70%;
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+        
+        .stat-item:last-child::after {
+            display: none;
+        }
+        
+        .stat-number {
+            font-size: 3rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+            color: #63b3ed;
+        }
+        
+        .stat-label {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .team {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+            margin: 40px 0;
+        }
+        
+        .team-member {
+            flex: 1 1 200px;
+            text-align: center;
+        }
+        
+        .team-member img {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid #3185fc;
+            margin-bottom: 15px;
+        }
+        
+        .team-member h4 {
+            margin-bottom: 5px;
+        }
+        
+        .team-member p {
+            color: #999999;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-pattern"></div>
+    
+    <!-- Header and Navigation -->
+    <header>
+        <a href="#" class="logo">Crime and Safety Reporting System</a>
+        <nav>
+            <ul>
+                <li><a href="/index.html">Home</a></li>
+                <li><a href="/crime-safety/all_Reports/allReports.html">All Reports</a></li>
+                <li><a href="/map/map.html">Crime Map</a></li>
+                <li><a href="/pages/aboutUs.html">About Us</a></li>
+                <li><a href="/pages/contactUs.html">Contact</a></li>
+            </ul>
+            <a href="#" class="cta-button" id="authButton">My Profile</a>
+        </nav>
+    </header>
+    
+    <!-- About Section -->
+    <section class="about-section">
+        <h1>About Our Crime and Safety Reporting System</h1>
+        
+        <p>Welcome to the Crime and Safety Reporting System, a community-driven platform dedicated to creating safer neighborhoods through transparency, collaboration, and technology.</p>
+        
+        <h2>Our Mission</h2>
+        <p>We believe that everyone deserves to live in a safe community. Our mission is to empower citizens and law enforcement with real-time crime data, reporting tools, and analytical insights to prevent crime and improve public safety.</p>
+        
+        <h2>Key Features</h2>
+        <div class="features">
+            <div class="feature-card">
+                <h3>Incident Reporting</h3>
+                <p>Quickly and securely report suspicious activities or crimes in your area for immediate attention from law enforcement.</p>
+            </div>
+            <div class="feature-card">
+                <h3>Crime Mapping</h3>
+                <p>Visualize crime hotspots and trends in your neighborhood through our interactive map interface.</p>
+            </div>
+            <div class="feature-card">
+                <h3>Real-time Alerts</h3>
+                <p>Receive instant notifications about safety concerns and crime updates in your designated areas.</p>
+            </div>
+        </div>
+
+           <!-- Statistics Section -->
+    <section class="stats-section">
+        <div class="stats-container">
+            <h2 class="stats-title">Our Impact</h2>
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <div class="stat-number">500+</div>
+                    <div class="stat-label">Communities Served</div>
+                </div>
+                
+                <div class="stat-item">
+                    <div class="stat-number">120K+</div>
+                    <div class="stat-label">Incident Reports</div>
+                </div>
+                
+                <div class="stat-item">
+                    <div class="stat-number">89%</div>
+                    <div class="stat-label">Case Resolution Rate</div>
+                </div>
+                
+                <div class="stat-item">
+                    <div class="stat-number">24%</div>
+                    <div class="stat-label">Crime Reduction</div>
+                </div>
+            </div>
+        </div>
+    </section>
+        
+        <h2>How It Works</h2>
+        <p>Our system connects community members with local law enforcement through a secure, user-friendly platform. When you report an incident, it's immediately logged in our system and routed to the appropriate authorities. Verified reports contribute to our crime mapping database, helping everyone stay informed about safety in their area.</p>
+  </div>
+           
+         
+        
+        <h2>Community Partnerships</h2>
+        <p>We work closely with local law enforcement agencies, neighborhood watch programs, and community organizations to ensure our platform meets the real needs of the communities we serve.</p>
+        
+        <p>Join us in making our communities safer. Together, we can make a difference.</p>
+    </section>
+    <!-- login_Or_profile button login -->
+    <script src="/navbar/login_Or_profile.js" type="module"></script>
+</body>
+</html>

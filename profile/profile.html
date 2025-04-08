@@ -1,69 +1,108 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>User Profile</title>
+    <title>My Profile | Crime and Safety</title>
+    <link rel="stylesheet" href="../navbar/navbar.css">
     <link rel="stylesheet" href="profile.css">
 </head>
 <body>
-    <div class="profile-card">
-        <!-- <h1>User Profile</h1> -->
-        <div class="profile-photo-section">
-            <img id="profile-photo" src="safety.png" alt="Profile Photo">
-            <input type="file" id="upload-photo" accept="image/*">
-        </div>
-        <div class="user-details">
-            <h2 id="user-name">User Name</h2>
-            <!-- Personal Details Form -->
-            <form id="personal-details-form">
-                <label for="email">Email:</label>
-                <input type="email" id="email" name="email">
-                
-                <label for="phone">Phone Number:</label>
-                <input type="tel" id="phone" name="phone">
-                
-                <label for="address">Address:</label>
-                <input type="text" id="address" name="address">
-                
-                <button type="submit">Update Details</button>
-            </form>
-        </div>
-        <div class="emergency-contacts">
-            <h2>Emergency Contacts</h2>
-            <form id="emergency-contacts-form">
-                <label for="contact-name">Contact Name:</label>
-                <input type="text" id="contact-name" name="contact-name">
-                
-                <label for="contact-phone">Contact Phone:</label>
-                <input type="tel" id="contact-phone" name="contact-phone">
-                
-                <button type="submit">Add Contact</button>
-            </form>
-            <ul id="contacts-list">
-                <!-- List of emergency contacts will be populated here -->
+    <div class="bg-pattern"></div>
+    
+    <!-- Header and Navigation -->
+    <header>
+        <a href="../index.html" class="logo">Crime and Safety Reporting System</a>
+        <nav>
+            <div class="menu-toggle" id="mobile-menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="../index.html">Home</a></li>
+                <li><a href="../crime-safety/all_Reports/allReports.html">All Reports</a></li>
+                <li><a href="../map/map.html">Crime Map</a></li>
+                <li><a href="../pages/aboutUs.html">About Us</a></li>
+                <li><a href="../pages/contactUs.html">Contact</a></li>
             </ul>
+            <a href="#" class="cta-button" id="logoutBtn">Logout</a>
+        </nav>
+    </header>
+    
+    <!-- Profile Section -->
+    <section class="profile-container">
+        <div class="profile-header">
+            <div class="profile-avatar">
+                <img src="https://ui-avatars.com/api/?name=John+Doe&background=random" alt="Profile Avatar" id="profileAvatar">
+                <input type="file" id="avatarUpload" accept="image/*" style="display: none;">
+                <!-- <button class="avatar-upload-btn" id="avatarUploadBtn"></button> -->
+            </div>
+            <h1 id="profileName">Loading...</h1>
+            <p id="profileEmail">Loading email...</p>
         </div>
-        <div class="user-actions">
-            <button id="my-reports">My Reports</button>
-            <button id="logout">Logout</button>
+        
+        <div class="profile-details">
+            <div class="profile-card">
+                <form id="profileForm">
+                    <div class="form-group">
+                        <label for="fullName">Full Name</label>
+                        <input type="text" id="fullName" name="fullName" required disabled>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="dob">Date of Birth</label>
+                            <input type="date" id="dob" name="dob" disabled>
+                        </div>
+                        <div class="form-group">
+                            <label for="gender">Gender</label>
+                            <select id="gender" name="gender" disabled>
+                                <option value="">Select</option>
+                                <option value="male">Male</option>
+                                <option value="female">Female</option>
+                                <option value="other">Other</option>
+                                <option value="prefer-not-to-say">Prefer not to say</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" name="email" disabled>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="phone">Phone Number</label>
+                        <input type="tel" id="phone" name="phone" disabled>
+                    </div>
+                    
+                    
+                    <div class="form-group">
+                        <label for="emergencyContact1">Emergency Contact 1</label>
+                        <input type="tel" id="emergencyContact1" name="emergencyContact1" placeholder="Name and Phone" disabled>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="emergencyContact2">Emergency Contact 2</label>
+                        <input type="tel" id="emergencyContact2" name="emergencyContact2" placeholder="Name and Phone" disabled>
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button type="button" class="secondary-button" id="editBtn">Edit Profile</button>
+                        <button type="submit" class="primary-button" id="saveBtn" style="display: none;">Save Changes</button>
+                        <button type="button" class="secondary-button" id="cancelBtn" style="display: none;">Cancel</button>
+                    </div>
+                </form>
+            </div>
         </div>
-        <div id="reports-section" class="hidden">
-            <h2>My Reports</h2>
-            <ul id="reports-list">
-                <!-- User-specific reports will be listed here -->
-            </ul>
-        </div>
-    </div>
+    </section>
 
-    <!-- Firebase App (the core Firebase SDK) -->
-    <!-- <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js"></script> -->
-     <!-- Add Firebase products that you want to use -->
-    <!-- <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-auth.js"></script> -->
-    <!-- <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore.js"></script> -->
-    <!-- <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-storage.js"></script>  -->
-    <script type="module" src="profile.js" ></script>
+    <!-- Footer -->
+    <footer class="footer">
+        <p>&copy; 2025 Crime & Safety System. All rights reserved.</p>
+    </footer>
 
+    <script type="module" src="profile.js"></script>
 </body>
 </html>

@@ -1,7 +1,7 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
-import { getAuth, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
+import { getAuth, signOut, onAuthStateChanged , setPersistence, browserLocalPersistence } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
 import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js";
-import { getMessaging, getToken, isSupported } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-messaging.js";
+
 
 // 🚀 Firebase Config
 const firebaseConfig = {
@@ -19,58 +19,14 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
 
-
-let messaging = null;
-const initializeMessaging = async () => {
-    try {
-        const isMessagingSupported = await isSupported();
-        if (isMessagingSupported) {
-            messaging = getMessaging(app);
-            return true;
-        }
-        console.log('Firebase messaging not supported in this browser');
-        return false;
-    } catch (err) {
-        console.error('Error initializing messaging:', err);
-        return false;
-    }
-};
-
-// 🚀 Register Service Worker
-// if ('serviceWorker' in navigator) {
-//         console.log("coming into if");
-        
-//     navigator.serviceWorker.register('firebase-messaging-sw.js')
-//     .then(
-//       (registration) => {
-//         console.log("success");
-        
-//         console.log("Service worker registration succeeded:", registration.scope);
-//       }).catch(
-//             (error) => {
-//                 console.error(`Service worker registration failed: ${error}`);
-//               }
-//       )
-//   } else {
-//     console.error("Service workers are not supported.");
-//   }
-
-if ('serviceWorker' in navigator) {
-    (async () => {
-        try {
-            const registration = await navigator.serviceWorker.register('./firebase-messaging-sw.js', {
-                scope: '/'
-            });
-            console.log('Service Worker registered with scope:', registration.scope);
-        } catch (error) {
-            console.error('Service Worker registration failed:', error);
-        }
-    })();
-}
+// / Set authentication persistence (keeps users logged in)
+setPersistence(auth, browserLocalPersistence)
+    .then(() => console.log("Auth persistence enabled"))
+    .catch((error) => console.error("Error setting persistence:", error));
 
 
 
-// 🚀 Get User Role Securely from Firestore
+//  Get User Role Securely from Firestore
 async function getUserRole(user) {
     if (!user) return null;
     const userRef = doc(db, "users", user.uid);
@@ -78,109 +34,79 @@ async function getUserRole(user) {
     return userSnap.exists() ? userSnap.data().role : null;
 }
 
-// 🚀 Logout function
-function logout() {
-    if (window.confirm("Are you sure you want to log out?")) {
-        signOut(auth).then(() => {
-            alert("Logged out successfully");
-            localStorage.removeItem("userRole");
-            localStorage.removeItem("redirected");
-            window.location.href = "loginIn/login.html";
-        }).catch(error => console.error("Logout failed: ", error.message));
-    }
-}
 
-// 🚀 Crime Report function
-function report() {
-    onAuthStateChanged(auth, (user) => {
-        if (user) {
-            window.location.href = "crime-safety/reportForm/crime-report.html";
-        } else {
-            alert("Please log in to report a crime.");
-            window.location.href = "loginIn/login.html";
-        }
-    });
-}
-
-// 🚀 Save FCM Token
-async function saveTokenToFirestore(token) {
-    const user = auth.currentUser;
-    if (!user) return;
-    const tokenRef = doc(db, 'userTokens', user.uid);
-    await setDoc(tokenRef, { token }, { merge: true });
-}
-
-// 🚀 Request Notification Permission & Get FCM Token
-async function requestNotificationPermission() {
-    // Initialize messaging only once
-    if (!messaging) {
-        if (!await initializeMessaging()) {
-            console.log('Notifications not supported in this browser');
-            return;
-        }
-    }
-
-    if (Notification.permission === "denied") {
-        console.warn("Notifications are blocked. Please enable them in browser settings.");
-        return;
-    }
-
+//  Crime Report function
+async function report() {
     try {
-        // If permission is not yet granted, ask the user
-        if (Notification.permission === "default") {
-            const permission = await Notification.requestPermission();
-            if (permission === "granted") {
-                const token = await getToken(messaging, {
-                    vapidKey: "BG9cdOmjzVeLvgGpTFK5-9eunHiIKu4Je6gvnuCfXZGfAjMcGOjWn3JtbSPBQQ_t59Ndy1xDA3bSkUOIsPFzmmM"
-                });
-                if (token) {
-                    await saveTokenToFirestore(token);
-                }
-            } else {
-                console.log("Notification permission denied");
+        const user = auth.currentUser;
+        if (user) {
+            // Check if user is verified if you have email verification
+            window.location.href = "./crime-safety/reportForm/crime-report.html";
+        } else {
+            const proceed = confirm("You need to login to report a crime. Proceed to login page?");
+            if (proceed) {
+                window.location.href = "./loginIn/login.html";
             }
         }
     } catch (error) {
-        console.error("Error getting FCM token:", error);
+        console.error("Error in report function:", error);
+        alert("An error occurred. Please try again later.");
     }
 }
 
+//  Add event listener when DOM loads
+document.addEventListener("DOMContentLoaded", function() {
+    const reportButton = document.getElementById("crimeReport");
+    reportButton.addEventListener("click", function(e) {
+        e.preventDefault();
+        report();
+    });
+});
 
 
-    
 
-// 🚀 Handle Authentication & Role-based Redirection
+// Handle Authentication & Role-based Redirection
 onAuthStateChanged(auth, async (user) => {
-    if (!localStorage.getItem("redirected") && user) {
-        const role = await getUserRole(user);
-        localStorage.setItem("userRole", role);
+    const currentPath = window.location.pathname;
 
-        try {
-            // Show notification prompt and wait for user interaction
-            await requestNotificationPermission();
-            localStorage.setItem("redirected", "true");
-
-            // Handle navigation based on role
-            const currentPath = window.location.pathname;
-            if (role === "officer" && !currentPath.includes("officer.html")) {
-                window.location.href = "officer.html";
-            } else if (role !== "officer" && !currentPath.includes("index.html")) {
-                document.getElementById("logoutBtn")?.classList.remove("hide-btn");
-                window.location.href = "index.html";
-            }
-        } catch (error) {
-            console.error("Error handling notifications:", error);
+    if (user) {
+        // Prevent logged-in users from accessing the login page
+        if (currentPath.includes("login.html")) {
+            window.location.href = "index.html";
+            return;
         }
-    } else if (!user) {
+
+        if (!localStorage.getItem("redirected")) {
+            const role = await getUserRole(user);
+            localStorage.setItem("userRole", role);
+
+            try {
+                
+                localStorage.setItem("redirected", "true");
+
+                // Redirect based on role
+                if (role === "officer" && !currentPath.includes("officer.html")) {
+                    window.location.href = "officer.html";
+                } else if (role !== "officer" && !currentPath.includes("index.html")) {
+                    document.getElementById("logoutBtn")?.classList.remove("hide-btn");
+                    window.location.href = "index.html";
+                }
+            } catch (error) {
+                console.error("Error handling", error);
+            }
+        }
+    } else {
+        // Remove stored user data
         localStorage.removeItem("userRole");
         localStorage.removeItem("redirected");
+
+        // Redirect unauthenticated users from restricted pages
+        if (currentPath.includes("profile.html") || currentPath.includes("crime-report.html")) {
+            window.location.href = "loginIn/login.html";
+        }
     }
 });
 
+// My profile or Login is in 
 
-// 🚀 Ensure DOM is Loaded Before Running Event Listeners
-document.addEventListener("DOMContentLoaded", () => {
-    document.getElementById("logoutBtn")?.addEventListener("click", logout);
-    document.getElementById("logoutBtn")?.classList.remove("hide-btn");  
-    document.getElementById("crimeReport")?.addEventListener("click", report);
-});
+

@@ -1,34 +1,84 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard</title>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron&display=swap" rel="stylesheet">
+    <title>Crime and Safety</title>
     <link rel="stylesheet" href="style.css">
-    <link rel="icon" type="image/x-icon" href="./favicon.ico">
-
+    <link rel="stylesheet" href="navbar/navbar.css">
 </head>
-
 <body>
-    <div class="dashboard-container">
-        <h2>Welcome to the Crime & Safety System</h2>
-        <button id="logoutBtn" class="btn hide-btn">Logout</button>
-        <button id="crimeReport" class="btn">Crime Report</button>
-        <button class="btn" onclick="window.location.href='./crime-safety/all_Reports/allReports.html'">View All
-            Reports</button>
-        <!-- Button to Navigate to Map Page -->
-        <button class="btn" onclick="location.href='./map/map.html'">View Reported Crimes on Map</button>
-    </div>
+    <div class="bg-pattern"></div>
+    
+    <!-- Header and Navigation -->
+    <header>
+        <a href="#" class="logo">Crime and Safety Reporting System</a>
+        <nav>
+              <div class="menu-toggle" id="mobile-menu">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+            <ul class="nav-menu">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="./crime-safety/all_Reports/allReports.html">All Reports</a></li>
+                <li><a href="../map/map.html">Crime Map</a></li>
+                <li><a href="../pages/aboutUs.html">About Us</a></li>
+                <li><a href="../pages/contactUs.html">Contact Us</a></li>
 
+            </ul>
+            <a href="#" class="cta-button" id="authButton">My Profile</a>
+        </nav>
+    </header>
+    
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1>World's Leading Safety Reporting System </h1>
+            <p>A comprehensive crime and safety reporting system dedicated to creating safer communities through transparent reporting, data analysis, and collaboration.</p>
+            <div class="hero-buttons">
+                <a href="#" class="primary-button" id="crimeReport" >Report Crime</a>
+                <a href="../pages/contactUs.html" class="secondary-button">Contact Us</a>
+            </div>
+        </div>
+        
+        <div class="hero-illustration">
+            <!-- Cybersecurity visualization -->
+            <div class="circle-outer"></div>
+            <div class="circle-platform"></div>
+            
+            <div class="shield-graphic">
+                <div class="shield-outer"></div>
+                <div class="shield-inner"></div>
+                <div class="lock-icon">🔒</div>
+            </div>
+            
+            <div class="person person-1">
+                <div class="person-platform"></div>
+                <!-- Simplified representation of a person -->
+                <div class="scan-circle" style="top: -30px; left: 10px;"></div>
+                <div class="scan-beam" style="top: -20px; left: 30px; transform: rotate(45deg);"></div>
+            </div>
+            
+            <div class="person person-2">
+                <div class="person-platform"></div>
+                <!-- Simplified representation of a person -->
+                <div class="scan-circle" style="top: -30px; right: 0;"></div>
+                <div class="scan-beam" style="top: -20px; right: 20px; transform: rotate(-45deg);"></div>
+            </div>
+        </div>
+    </section>
+    <!-- Footer -->
+    <!-- <footer class="footer">
+        <p>&copy; 2025 Crime & Safety System. All rights reserved.</p>
+    </footer> -->
 
     <script type="module" src="script.js"></script>
-
+    <!-- login_Or_profile button login -->
+    <script src="/navbar/login_Or_profile.js" type="module"></script>
     
 
-    
-
+   
 </body>
 
 </html>

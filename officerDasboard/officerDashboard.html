@@ -3,31 +3,165 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Officer Dashboard</title>
+    <title>Officer Dashboard | Crime & Safety System</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="stylesheet" href="../navbar/navbar.css">
+    <link rel="stylesheet" href="officerDashboard.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
-    <h1>Officer Dashboard</h1>
+    <div class="bg-pattern"></div>
+    
+    <!-- Header -->
+    <header>
+        <a href="../index.html" class="logo">Officer Dashboard</a>
+        <nav>
+            <ul class="nav-menu">
+                <li><a href="#" class="active"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+                <li><a href="#reports"><i class="fas fa-clipboard-list"></i> Cases</a></li>
+                <li><a href="#analytics"><i class="fas fa-chart-line"></i> Analytics</a></li>
+                <li><a href="../profile/profile.html"><i class="fas fa-user"></i> Profile</a></li>
+            </ul>
+            <a href="#" class="cta-button" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Logout</a>
+        </nav>
+        <div class="menu-toggle" id="mobile-menu">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+    </header>
 
-    <button onclick="logout()">Logout</button>
+    <!-- Dashboard Layout -->
+    <main class="dashboard-container">
+        <!-- Quick Stats -->
+        <section class="stats-container">
+            <div class="stat-card">
+                <div class="stat-icon pending">
+                    <i class="fas fa-exclamation-circle"></i>
+                </div>
+                <div class="stat-info">
+                    <h3 id="pendingCount">0</h3>
+                    <p>Pending Cases</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon in-progress">
+                    <i class="fas fa-tasks"></i>
+                </div>
+                <div class="stat-info">
+                    <h3 id="progressCount">0</h3>
+                    <p>In Progress</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon resolved">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <div class="stat-info">
+                    <h3 id="resolvedCount">0</h3>
+                    <p>Resolved Cases</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon feedback">
+                    <i class="fas fa-comments"></i>
+                </div>
+                <div class="stat-info">
+                    <h3 id="feedbackCount">0</h3>
+                    <p>New Feedback</p>
+                </div>
+            </div>
+        </section>
 
-    <h2>Crime Reports</h2>
-    <table border="1">
-        <thead>
-            <tr>
-                <th>Report ID</th>
-                <th>Description</th>
-                <th>Status</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody id="reportTable"></tbody>
-    </table>
-    <!-- <a href=""></a> -->
+        <!-- Recent Cases -->
+        <section class="dashboard-section recent-cases">
+            <div class="section-header">
+                <h2><i class="fas fa-clipboard-list"></i> Recent Cases</h2>
+                <a href="#reports" class="view-all">View All</a>
+            </div>
+            <div class="cases-list" id="recentCases">
+                <!-- Cases will be loaded here -->
+            </div>
+        </section>
 
+         <!-- Crime Map Section -->
+         <section class="dashboard-section crime-map">
+            <div class="section-header">
+                <h2><i class="fas fa-map-marked-alt"></i> Live Crime Map</h2>
+                <div class="map-controls">
+                    <button id="heatmapToggle"><i class="fas fa-fire"></i> Heatmap</button>
+                    <select id="crimeTypeFilter">
+                        <option value="all">All Crimes</option>
+                        <option value="Theft">Theft</option>
+                        <option value="Assault">Assault</option>
+                        <option value="Vandalism">Vandalism</option>
+                        <option value="Fraud">Fraud</option>
+                    </select>
+                </div>
+            </div>
+            <div id="crimeMap"></div>
+        </section>
 
+        <!-- Analytics Section -->
+        <section class="dashboard-section crime-analytics">
+            <div class="section-header">
+                <h2><i class="fas fa-chart-pie"></i> Crime Analytics</h2>
+            </div>
+            <div class="analytics-grid">
+                <div class="chart-container">
+                    <canvas id="crimeTrendChart"></canvas>
+                </div>
+                <div class="chart-container">
+                    <canvas id="crimeTypeChart"></canvas>
+                </div>
+                <div class="chart-container">
+                    <canvas id="resolutionTimeChart"></canvas>
+                </div>
+                <div class="chart-container">
+                    <canvas id="officerPerformanceChart"></canvas>
+                </div>
+            </div>
+        </section>
 
+        <!-- Feedback Section -->
+        <section class="dashboard-section recent-feedback">
+            <div class="section-header">
+                <h2><i class="fas fa-comment-dots"></i> Recent Feedback</h2>
+            </div>
+            <div class="feedback-list" id="recentFeedback" >
+                <!-- Feedback will be loaded here -->
+            </div>
+        </section>
+    </main>
 
+    <!-- Case Detail Modal -->
+    <div id="caseModal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h2 id="modalCaseTitle">Case Details</h2>
+            <div class="modal-body" id="modalCaseContent">
+                <!-- Case details will be loaded here -->
+            </div>
+            <div class="modal-actions">
+                <select id="statusUpdateSelect">
+                    <option value="pending">Pending</option>
+                    <option value="in-progress">In Progress</option>
+                    <option value="resolved">Resolved</option>
+                </select>
+                <button id="updateStatusBtn" class="primary-button">Update Status</button>
+            </div>
+        </div>
+    </div>
 
-    <script type="module" src="officer.js"></script>
+    <!-- Footer -->
+    <footer class="footer" >
+        <p>&copy; 2025 Crime & Safety System. All rights reserved.</p>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script type="module" src="officerDashboard.js"></script>
+    <script src="/navbar/navbar.js"></script>
 </body>
 </html>

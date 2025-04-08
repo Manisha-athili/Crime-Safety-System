@@ -9,88 +9,39 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
 <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
     <link rel="stylesheet" href="report.css">
+    <link rel="stylesheet" href="../../navbar/navbar.css">
 
-    <style>
+    <!-- font assome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
-        body {
-            font-family: 'Poppins', sans-serif;
-            background-color: #f4f4f4;
-            margin: 0;
-            padding: 20px;
-        }
-
-        h2 {
-            text-align: center;
-            color: #333;
-        }
-
-        form {
-            background: #fff;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            max-width: 600px;
-            margin: 0 auto;
-            transition: transform 0.3s ease-in-out;
-        }
-
-        form:hover {
-            transform: scale(1.02);
-        }
-
-        label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 600;
-        }
-
-        input, select, textarea, button {
-            width: 100%;
-            padding: 10px;
-            margin-bottom: 20px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            transition: border-color 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
-        }
-
-        input:focus, select:focus, textarea:focus {
-            border-color: #007bff;
-            box-shadow: 0 0 8px rgba(0, 123, 255, 0.25);
-        }
-
-        button {
-            background-color: #007bff;
-            color: #fff;
-            border: none;
-            cursor: pointer;
-            transition: background-color 0.3s ease-in-out;
-        }
-
-        button:hover {
-            background-color: #0056b3;
-        }
-
-        #previewImage {
-            margin-top: 10px;
-            transition: opacity 0.3s ease-in-out;
-        }
-
-        #previewImage.show {
-            opacity: 1;
-        }
-
-        #previewImage.hide {
-            opacity: 0;
-        }
-    </style>
 </head>
 
 <body>
+    <div class="bg-pattern"></div>
+    
+    <!-- Header and Navigation -->
+    <header>
+        <a href="../index.html" class="logo">Crime and Safety Reporting System</a>
+        <nav>
+            <ul>
+                <li><a href="/index.html">Home</a></li>
+                <li><a href="/crime-safety/all_Reports/allReports.html">All Reports</a></li>
+                <li><a href="/map/map.html">Crime Map</a></li>
+                <li><a href="/pages/aboutUs.html">About Us</a></li>
+                <li><a href="/pages/contactUs.html">Contact</a></li>
+            </ul>
+            <a href="../profile.html" class="cta-button">My Profile</a>
+        </nav>
+    </header>
 
-    <h2>Report a Crime</h2>
+    <!-- Main Content -->
+    <div class="main-container">
+        <h1 class="page-header"> Report a Crime</h1>
+
+    <!-- Crime Report Form -->
     <form id="crimeForm">
         <label for="crimeType">Crime Type:</label>
-        <select id="crimeType">
+        <select id="crimeType"  required>
             <option value="Theft">Theft</option>
             <option value="Assault">Assault</option>
             <option value="Vandalism">Vandalism</option>
@@ -103,26 +54,83 @@
         
         <label for="crimeImage">Upload Image:</label>
         <input type="file" id="crimeImage" accept="image/*">
-        <img id="previewImage" style="max-width: 200px; display: none;">
+        <img id="previewImage">
 
         <label for="location">Location:</label>
         <input type="text" id="location" required>
 
+        <button type="button" id="getLocation" class="btn btn-secondary">Get My Current Location</button>
+            <p id="locationis"></p>
+
         <label for="datetime">Date & Time:</label>
         <input type="datetime-local" id="datetime" required>
-        <!-- <button id="location-btn">Get My Location</button> -->
-         <button type="button" id="getLocation">get location</button>
-         <p id="locationis"></p>
-
-        <button type="submit" id="report-btn">Submit Report</button>
+       
+        <button type="submit" class="btn btn-primary">Submit Report</button>
     </form>
+    <!-- end of the report form -->
 
-    <div id="myReportsContainer"></div>
-    <div id="otherReportsContainer"></div>
+    <!-- spinner -->
+    <div id="loader" style="display:none; text-align:center; margin: 1rem;">
+        <p>Loading reports...</p>
+      </div>
+      
+
+    <!-- Report section is here -->   
+    <div class="reports-container">
+            
+            <div class="reports-section" id="otherReportsSection">
+                <h3>Other Reports</h3>
+                <div class="reports-grid" id="otherReportsContainer">
+                    <!-- Other reports will be loaded here for admins/officers -->
+                </div>
+            </div>
+        </div>
+    </div> 
+    <!-- end of main container -->
+
+    <div id="paginationControls">
+        <button id="prevPageBtn" class="btn" disabled><i class="fa fa-arrow-left" aria-hidden="true"></i></button>
+        <button id="nextPageBtn" class="btn"><i class="fa fa-arrow-right" aria-hidden="true"></i></button>
+      </div>
+      
+
+    <!-- Form successfull alert Confirmation Modal -->
+        <div id="confirmationModal" 
+        style="display:none; 
+        position:fixed; top:0; left:0; 
+        width:100%; height:100%; 
+        background:rgba(0,0,0,0.7); 
+        z-index:1000;">
+
+        <div style="background:#0e0627; 
+        padding:20px; 
+        max-width:500px; 
+        margin:100px auto; 
+        border-radius:10px; 
+        border-top: 3px solid #3185fc;">
+
+        <h3 style="color:#ff6537; margin-bottom:15px;">Report Submitted Successfully!</h3>
+
+        <p style="margin-bottom:10px;">Your reference number: <span id="refNumber" style="font-weight:bold;"></span></p>
+
+        <p style="font-size:14px; color:#cccccc; margin-bottom:20px;">We've sent a confirmation to your email.</p>
+
+        <div id="modalMessage" style="color:#a8f0c6; margin-bottom:20px;"></div>
+
+        <button id="closeModal" class="btn btn-primary" style="width:100%; padding:12px;">Close</button>
+
+            </div>
+        </div>
 
 
     <!-- Crime Reporting Script -->
     <script type="module" src="report.js"></script>
+
+    <!-- for email from EmailJS -->
+    <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
+    <script>
+    emailjs.init("W0J441OUjBgt5YDQx"); 
+    </script>
 </body>
 
 </html>
