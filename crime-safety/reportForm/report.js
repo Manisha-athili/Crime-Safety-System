@@ -323,7 +323,7 @@ function addActionButtons(reportDoc, container) {
 
     // Update Button (✏️)
     const updateBtn = document.createElement("button");
-    updateBtn.innerHTML = "✏️ Update";
+    updateBtn.innerHTML = " Update";
     updateBtn.style.cursor = "pointer";
     updateBtn.style.padding = "5px 10px";
     updateBtn.style.border = "none";
