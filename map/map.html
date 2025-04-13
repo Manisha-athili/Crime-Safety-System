@@ -30,6 +30,9 @@
         min-width: 200px;
     }
 
+    .filter-controls select option {
+    background-color: #0e0627;
+    }
     
     #pagination { 
         text-align: center; 
@@ -49,9 +52,8 @@
 
     import { initializeApp , getApps } from 'https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js';
     import { getFirestore, collection, getDocs } from 'https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js';
-    import { getAuth } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
-
-
+    import { getAuth,onAuthStateChanged   } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
+    
     const firebaseConfig = {
       apiKey: "AIzaSyBsJS-phFoPIzSEtjdr0Y9lZ-J79XpKjV8",
       authDomain: "crime-and-safety.firebaseapp.com",
@@ -64,6 +66,22 @@
     const app = getApps().length ? getApps()[0] : initializeApp(firebaseConfig);
     const db = getFirestore(app);
     const auth = getAuth(app);
+
+    document.addEventListener("DOMContentLoaded", () => {
+     const authButton = document.getElementById("authButton");
+
+     // Check Authentication and Fetch User Role
+     onAuthStateChanged(auth, async (user) => {
+         if (user) {
+             authButton.style.display="block";
+             await fetchData();
+             }
+             
+         else {
+                authButton.style.display="none";
+            }
+        });
+    });
 
 
     const map = L.map('map').setView([17.3850, 78.4867], 12);
@@ -192,14 +210,16 @@
       <option value="">All Crime Types</option>
       <option value="Theft">Theft</option>
       <option value="Assault">Assault</option>
-      <option value="Vandalism">Vandalism</option>
-      <option value="Fraud">Fraud/option>
+      <!-- <option value="Vandalism">Vandalism</option> -->
+      <option value="Fraud">Fraud</option>
       <option value="Other">Other</option>
     </select>
     <select id="status">
       <option value="">All Status</option>
+      <option value="Reported">Reported</option>
       <option value="Pending">Pending</option>
       <option value="Resolved">Resolved</option>
+
     </select>
     <input type="text" id="search" placeholder="Search location or description">
   </div>
@@ -209,5 +229,6 @@
 
    <!-- login_Or_profile button login -->
    <script src="../loginOrprofile.js" type="module"></script>
+   
 </body>
 </html>

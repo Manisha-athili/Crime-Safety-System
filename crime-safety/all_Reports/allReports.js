@@ -56,6 +56,12 @@ async function loadAllReports(direction = null) {
             queryConstraints.push(where("status", "==", statusFilter.value));
         }
         
+        // Add location filter if it exists
+        if (locationFilter.value) {
+            queryConstraints.push(where("location", ">=", locationFilter.value));
+            queryConstraints.push(where("location", "<=", locationFilter.value + "\uf8ff"));
+        }
+        
         // Handle pagination
         if (direction === "next" && lastVisible) {
             queryConstraints.push(startAfter(lastVisible));
@@ -67,6 +73,17 @@ async function loadAllReports(direction = null) {
             // Reset to first page if going back from page 2
             if (currentPage === 1) {
                 queryConstraints = [orderBy("timestamp", "desc"), limit(pageSize)];
+                // Reapply filters
+                if (crimeTypeFilter.value) {
+                    queryConstraints.push(where("crimeType", "==", crimeTypeFilter.value));
+                }
+                if (statusFilter.value) {
+                    queryConstraints.push(where("status", "==", statusFilter.value));
+                }
+                if (locationFilter.value) {
+                    queryConstraints.push(where("location", ">=", locationFilter.value));
+                    queryConstraints.push(where("location", "<=", locationFilter.value + "\uf8ff"));
+                }
             }
         }
         
@@ -79,44 +96,34 @@ async function loadAllReports(direction = null) {
         if (querySnapshot.empty) {
             allReportsContainer.innerHTML = '<p class="message">No crime reports found matching your criteria.</p>';
             nextBtn.disabled = true;
-            prevBtn.disabled = false;
+            prevBtn.disabled = currentPage > 1;
             return;
         }
         
         // Save the last document for pagination
         lastVisible = querySnapshot.docs[querySnapshot.docs.length - 1];
         
-        // Process documents with client-side location filtering
-        const locationFilterValue = locationFilter.value.toLowerCase();
-        let hasMatchingResults = false;
-        
+        // Process documents
         querySnapshot.forEach(doc => {
             const data = doc.data();
-            
-            // Apply client-side location filter
-            if (locationFilterValue && !data.location?.toLowerCase().includes(locationFilterValue)) {
-                return;
-            }
-            
-            hasMatchingResults = true;
             
             // Format date
             const dateTime = data.timestamp ? 
                 new Date(data.timestamp.seconds * 1000).toLocaleString() : 
                 (data.datetime || "Not specified");
             
-            // Determine status class
+            // Determine status class to change card status when offer chagehes status
             let statusClass = "status-reported";
             if (data.status) {
                 const statusLower = data.status.toLowerCase();
-                if (statusLower.includes("investigat") || statusLower.includes("pending")) {
+                if (statusLower.includes("pending")) {
                     statusClass = "status-investigating";
                 } else if (statusLower.includes("resolv")) {
                     statusClass = "status-resolved";
-                } else if (statusLower.includes("clos")) {
-                    statusClass = "status-closed";
                 }
             }
+           
+
             
             // Create report card
             const reportCard = document.createElement("div");
@@ -136,10 +143,6 @@ async function loadAllReports(direction = null) {
             `;
             allReportsContainer.appendChild(reportCard);
         });
-        
-        if (!hasMatchingResults) {
-            allReportsContainer.innerHTML = '<p class="message">No reports match your location filter.</p>';
-        }
         
         // Update pagination buttons
         updatePaginationButtons(querySnapshot.size);
@@ -191,7 +194,7 @@ onAuthStateChanged(auth, (user) => {
     } else {
         allReportsContainer.innerHTML = `
             <p class="message">You need to be logged in to view crime reports.</p>
-            <a href="../../ loginIn/login.html" class="btn btn-primary" style="margin: 0 auto;">Login</a>
+            <a href="../../loginIn/login.html" class="btn btn-primary" style="margin: 0 auto;">Login</a>
 
         `;
         if(reportbtn){reportbtn.style.display = "none"}

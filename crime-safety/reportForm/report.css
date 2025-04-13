@@ -69,6 +69,10 @@
         color: white;
         font-size: 16px;
     }
+
+    #crimeForm  select option {
+        background-color: black;
+    }
     
     #crimeForm textarea {
         min-height: 100px;

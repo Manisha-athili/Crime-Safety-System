@@ -15,7 +15,7 @@ DETAILS OF THE OFFICERS::
 
 <!-- 0. profile /login button - (all pages ...My profile) -->
 <!-- 1 pagination (All reports) -->
-<!-- 2. guaster -->
+<!-- 2. guest login -->
 <!-- 3. profile page -->
 <!-- 4. Officer dashboard- cs , js, html -->
 <!-- 5. profile  -->
@@ -25,5 +25,6 @@ DETAILS OF THE OFFICERS::
 <!-- 8. remove email from cards -->
 9. filters
 10 feedbacks
+11. num of reports in officer (after case resolved)
 
 

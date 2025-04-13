@@ -145,7 +145,7 @@ if (crimeForm) {
     const description = document.getElementById("description").value;
     const location = document.getElementById("location").value;
     const datetime = document.getElementById("datetime").value;
-    const status = "pending";
+    const status = "Reported";
 
     try {
         const docRef = await addDoc(collection(db, "crimeReports"), {

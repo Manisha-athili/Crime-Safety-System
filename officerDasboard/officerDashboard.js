@@ -148,7 +148,7 @@ async function openCaseModal(id, data) {
 // Default images mapping
 const DEFAULT_IMAGES = {
     'Theft': '../../asserts/Theft.jpg',
-    'Vandalism': '../../asserts/Vandalism.jpg',
+    // 'Vandalism': '../../asserts/Vandalism.jpg',
     'Assault': '../../asserts/Assault.jpeg',
     'Fraud': '../../asserts/Fraud.jpeg',
     'Other': '../../asserts/other.jpeg'
@@ -167,12 +167,12 @@ const imageHTML = caseData.image ?
             <p><strong>Coordinates:</strong> ${caseData.lat?.toFixed(4)}, ${caseData.lon?.toFixed(4)}</p>
             <p><strong>Reported by:</strong> ${caseData.userEmail}</p>
             <p><strong>Reported on:</strong> ${new Date(caseData.timestamp?.toDate()).toLocaleString()}</p>
-            <p><strong>Status:</strong> <span class="case-status status-${caseData.status.replace(' ', '-')}">${caseData.status}</span></p>
+            <p><strong>Status:</strong> <span class="case-status status-${caseData.status.replace(' ', '')}">${caseData.status}</span></p>
         </div>
         ${imageHTML}
     `;
-    
-    statusUpdateSelect.value = caseData.status.toLowerCase().replace(' ', '-');
+    console.log(caseData.status)
+    statusUpdateSelect.value = caseData.status.toLowerCase().replace(' ', '');
     caseModal.style.display = 'block';
 }
 
@@ -180,13 +180,16 @@ const imageHTML = caseData.image ?
 async function updateCaseStatus() {
     try {
         await updateDoc(doc(db, "crimeReports", currentCaseId), {
-            status: statusUpdateSelect.value.replace('-', ' '),
+            status: statusUpdateSelect.value.replace(' ', ''),
             updatedAt: serverTimestamp()
         });
+        console.log(statusUpdateSelect.value)
         alert('Status updated successfully!');
         loadRecentCases();
         loadStats();
+
         caseModal.style.display = 'none';
+        
     } catch (error) {
         console.error('Error updating status:', error);
         alert('Failed to update status');

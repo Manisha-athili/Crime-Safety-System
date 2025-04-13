@@ -165,7 +165,7 @@
                 <li><a href="../pages/aboutUs.html">About Us</a></li>
                 <li><a href="../pages/contactUs.html">Contact</a></li>
             </ul>
-            <a href="" class="cta-button" id="authButton">My Profile</a>
+            <a href="../profile/profile.html" class="cta-button" id="authButton">My Profile</a>
         </nav>
     </header>
     
@@ -238,5 +238,41 @@
     </section>
     <!-- login_Or_profile button login -->
     <script src="./loginOrprofile.js" type="module"></script>
+    <script type="module">
+       import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
+        import { getAuth, onAuthStateChanged  } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
+
+        // 🚀 Firebase Config
+        const firebaseConfig = {
+            apiKey: "AIzaSyBsJS-phFoPIzSEtjdr0Y9lZ-J79XpKjV8",
+            authDomain: "crime-and-safety.firebaseapp.com",
+            projectId: "crime-and-safety",
+            storageBucket: "crime-and-safety.appspot.com",
+            messagingSenderId: "167045576983",
+            appId: "1:167045576983:web:4b19f62d9f0268af565f52",
+            measurementId: "G-QRL88H2M6Q"
+        };
+
+        // 🚀 Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+
+        
+
+        document.addEventListener("DOMContentLoaded", () => {
+        const authButton = document.getElementById("authButton");
+
+        //  Step 3: Check Authentication and Fetch User Role
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                authButton.style.display="block";
+                }
+                
+            else {
+                authButton.style.display="none";
+            }
+        });
+    });
+    </script>
 </body>
 </html>

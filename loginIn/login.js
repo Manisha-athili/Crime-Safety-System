@@ -81,13 +81,14 @@ async function loginUser() {
           localStorage.setItem("userRole", role);
         
         // Redirect based on role
-        setTimeout(() => {
+        // setTimeout(() => {
                 if (role === "officer") {
                     window.location.href = "../officerDasboard/officerDashboard.html";
                 } else if (role === "user") {
+
                     window.location.href = "../index.html";
                 }
-            }, 1500);
+            // }, 1500);
             } catch (error) {
             console.error("Login error:", error);
             if (error.code === "auth/user-not-found") {
@@ -95,7 +96,7 @@ async function loginUser() {
             } else if (error.code === "auth/wrong-password") {
                 messageBox.innerText = "Incorrect password. Try again.";
             } else {
-                messageBox.innerText = `⚠️ ${error.message}`;
+                messageBox.innerText = "Credentials are invalid.";
             }
         }
     }
