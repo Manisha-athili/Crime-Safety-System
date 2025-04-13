@@ -215,7 +215,6 @@ async function loadReports(paginateDirection = null) {
 
     const allReportsContainer = document.getElementById("otherReportsContainer");
     const loader = document.getElementById("loader");
-   
     const nextBtn = document.getElementById("nextPageBtn");
     const prevBtn = document.getElementById("prevPageBtn");
 
@@ -229,14 +228,33 @@ async function loadReports(paginateDirection = null) {
 
     try {
         let reportsQuery = collection(db, "crimeReports");
-        let q = query(reportsQuery, orderBy("timestamp", "desc"), limit(pageSize));
+        
+        // Only fetch reports by the current user
+        let q = query(
+            reportsQuery,
+            where("userId", "==", currentUser.uid), // Filter by logged-in user
+            orderBy("timestamp", "desc"),
+            limit(pageSize)
+        );
 
         if (paginateDirection === "next" && lastVisible) {
-            q = query(reportsQuery, orderBy("timestamp", "desc"), startAfter(lastVisible), limit(pageSize));
+            q = query(
+                reportsQuery,
+                where("userId", "==", currentUser.uid),
+                orderBy("timestamp", "desc"),
+                startAfter(lastVisible),
+                limit(pageSize)
+            );
         } else if (paginateDirection === "prev" && reportSnapshots.length > 1) {
-            reportSnapshots.pop(); // remove current page
+            reportSnapshots.pop(); // Remove current page
             const previousCursor = reportSnapshots[reportSnapshots.length - 1];
-            q = query(reportsQuery, orderBy("timestamp", "desc"), startAfter(previousCursor), limit(pageSize));
+            q = query(
+                reportsQuery,
+                where("userId", "==", currentUser.uid),
+                orderBy("timestamp", "desc"),
+                startAfter(previousCursor),
+                limit(pageSize)
+            );
         }
 
         const snapshot = await getDocs(q);
@@ -245,25 +263,99 @@ async function loadReports(paginateDirection = null) {
             firstVisible = snapshot.docs[0];
             lastVisible = snapshot.docs[snapshot.docs.length - 1];
 
-            // Avoid pushing duplicates
             if (paginateDirection !== "prev") {
                 reportSnapshots.push(firstVisible);
             }
         }
 
-        snapshot.forEach(doc => createReportCard(doc, allReportsContainer, true));
+        // Display reports with delete & update buttons
+        snapshot.forEach(doc => {
+            createReportCard(doc, allReportsContainer, true);
+            addActionButtons(doc, allReportsContainer); // Add delete & update buttons
+        });
 
         // Enable or disable buttons after data loads
         prevBtn.disabled = reportSnapshots.length <= 1;
         nextBtn.disabled = snapshot.size < pageSize;
 
     } catch (error) {
-        console.error("Error loading reports with pagination:", error);
+        console.error("Error loading reports:", error);
     } finally {
         loader.style.display = "none";
     }
 }
 
+// Helper function to add delete & update buttons
+function addActionButtons(reportDoc, container) {
+    const reportId = reportDoc.id;
+    const reportElement = container.querySelector(`[data-report-id="${reportId}"]`);
+    if (!reportElement) return;
+
+    const actionsDiv = document.createElement("div");
+    actionsDiv.style.display = "flex";
+    actionsDiv.style.gap = "10px";
+    actionsDiv.style.marginTop = "10px";
+
+    // Delete Button (🗑️)
+    const deleteBtn = document.createElement("button");
+    deleteBtn.innerHTML = "🗑️ Delete";
+    deleteBtn.style.cursor = "pointer";
+    deleteBtn.style.padding = "5px 10px";
+    deleteBtn.style.border = "none";
+    deleteBtn.style.borderRadius = "4px";
+    deleteBtn.style.background = "#ff4444";
+    deleteBtn.style.color = "white";
+
+    deleteBtn.addEventListener("click", async (e) => {
+        e.stopPropagation();
+        const confirmDelete = confirm("Are you sure you want to delete this report?");
+        if (confirmDelete) {
+            try {
+                await deleteDoc(doc(db, "crimeReports", reportId));
+                reportElement.remove(); // Remove from UI
+                alert("Report deleted successfully!");
+            } catch (error) {
+                console.error("Error deleting report:", error);
+                alert("Failed to delete report.");
+            }
+        }
+    });
+
+    // Update Button (✏️)
+    const updateBtn = document.createElement("button");
+    updateBtn.innerHTML = "✏️ Update";
+    updateBtn.style.cursor = "pointer";
+    updateBtn.style.padding = "5px 10px";
+    updateBtn.style.border = "none";
+    updateBtn.style.borderRadius = "4px";
+    updateBtn.style.background = "#4285f4";
+    updateBtn.style.color = "white";
+
+    updateBtn.addEventListener("click", async (e) => {
+        e.stopPropagation();
+        const newTitle = prompt("Enter new title:", reportDoc.data().title);
+        const newDescription = prompt("Enter new description:", reportDoc.data().description);
+
+        if (newTitle !== null && newDescription !== null) {
+            try {
+                await updateDoc(doc(db, "crimeReports", reportId), {
+                    title: newTitle,
+                    description: newDescription,
+                    lastUpdated: new Date() // Track last update time
+                });
+                alert("Report updated successfully!");
+                loadReports(); // Refresh the list
+            } catch (error) {
+                console.error("Error updating report:", error);
+                alert("Failed to update report.");
+            }
+        }
+    });
+
+    actionsDiv.appendChild(updateBtn);
+    actionsDiv.appendChild(deleteBtn);
+    reportElement.appendChild(actionsDiv);
+}
 
 // Step 8: Create Report Cards
 function createReportCard(doc, container) {
@@ -271,6 +363,7 @@ function createReportCard(doc, container) {
     const reportCard = document.createElement("div");
     reportCard.className = "report-card";
 
+    reportCard.setAttribute("data-report-id", doc.id); // for del# update
 
     // Determine status class
     let statusClass = "status-pending";

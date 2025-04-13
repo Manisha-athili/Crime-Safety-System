@@ -91,7 +91,7 @@
         border-radius: 8px;
         box-shadow: 0 2px 8px rgba(0,0,0,0.1);
     }
-    
+
     /* Buttons */
     .btn {
         padding: 12px 25px;
@@ -112,7 +112,13 @@
     .btn-primary:hover {
         background-color: #2569c7;
     }
+
+    .report-card button {
+        display: inline-block !important;
+        visibility: visible !important;
     
+      }
+
     .btn-secondary {
         background-color: transparent;
         color: #ff6537;
@@ -127,6 +133,7 @@
     .reports-container {
         margin-top: 50px;
     }
+
     
     .reports-section {
         margin-bottom: 40px;
