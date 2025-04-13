@@ -105,3 +105,52 @@ onAuthStateChanged(auth, async (user) => {
     }
 });
 
+// usefull links section
+
+const track = document.querySelector(".carousel-track");
+const cards = Array.from(track.children);
+const dotsContainer = document.querySelector(".carousel-dots");
+const cardsPerPage = 4;
+let currentSlide = 0;
+const totalSlides = Math.ceil(cards.length / cardsPerPage);
+
+function updateCarousel() {
+  const cardWidth = cards[0].offsetWidth + 20;
+  track.style.transform = `translateX(-${currentSlide * cardWidth * cardsPerPage}px)`;
+
+  document.querySelectorAll(".carousel-dot").forEach((dot, idx) => {
+    dot.classList.toggle("active", idx === currentSlide);
+  });
+}
+
+function createDots() {
+  for (let i = 0; i < totalSlides; i++) {
+    const dot = document.createElement("span");
+    dot.classList.add("carousel-dot");
+    if (i === 0) dot.classList.add("active");
+    dot.addEventListener("click", () => {
+      currentSlide = i;
+      updateCarousel();
+      resetAutoplay();
+    });
+    dotsContainer.appendChild(dot);
+  }
+}
+
+function nextSlide() {
+  currentSlide = (currentSlide + 1) % totalSlides;
+  updateCarousel();
+}
+
+let autoplayInterval = setInterval(nextSlide, 3000); // Change slide every 3s
+
+function resetAutoplay() {
+  clearInterval(autoplayInterval);
+  autoplayInterval = setInterval(nextSlide, 3000);
+}
+
+window.addEventListener("resize", updateCarousel);
+
+createDots();
+updateCarousel();
+
