@@ -265,8 +265,8 @@ async function loadRecentFeedback() {
 
 // Load Statistics
 async function loadStats() {
-    const pendingQuery = query(collection(db, "crimeReports"), where("status", "==", "pending"));
-    const progressQuery = query(collection(db, "crimeReports"), where("status", "==", "in progress"));
+    const pendingQuery = query(collection(db, "crimeReports"), where("status", "==", "reported"));
+    const progressQuery = query(collection(db, "crimeReports"), where("status", "==", "pending"));
     const resolvedQuery = query(collection(db, "crimeReports"), where("status", "==", "resolved"));
     const feedbackQuery = query(collection(db, "feedback"), where("reviewed", "==", false));
     
