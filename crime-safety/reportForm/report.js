@@ -78,51 +78,44 @@ imageInput.addEventListener("change", function () {
 // Step 5: Get User Location (Latitude & Longitude)
 
 const locationButton = document.getElementById("getLocation");
+const locationStatus = document.getElementById("locationis");
+
 let lat = null;
 let lon = null;
 
 if (locationButton) {
-locationButton.addEventListener("click", getLocation);
+    locationButton.addEventListener("click", getLocation);
 }
 
 function getLocation() {
     if (navigator.geolocation) {
+        locationStatus.innerHTML = "Getting your location...";
         navigator.geolocation.getCurrentPosition(showPosition, showError);
-        const locationStatus = document.getElementById("locationis");
-        if (locationStatus) {
-            locationStatus.innerHTML = "Accessing your location...";
-        }
+        locationStatus.innerHTML = " "
     } else {
-        const locationStatus = document.getElementById("locationis");
-        if (locationStatus) {
-            locationStatus.innerHTML = "Geolocation is not supported by this browser.";
-        }
+        locationStatus.innerHTML = "Geolocation not supported.";
     }
 }
-
 
 function showPosition(position) {
     lat = position.coords.latitude;
     lon = position.coords.longitude;
-    alert("location accessed")
+    locationStatus.innerHTML = `Location: ${lat.toFixed(4)}, ${lon.toFixed(4)}`;
 }
 
 function showError(error) {
-    const locationStatus = document.getElementById("locationis");
-    if (!locationStatus) return;
-    
     switch(error.code) {
         case error.PERMISSION_DENIED:
-            locationStatus.innerHTML = "User denied the request for Geolocation.";
+            locationStatus.innerHTML = "Location access denied.";
             break;
         case error.POSITION_UNAVAILABLE:
-            locationStatus.innerHTML = "Location information is unavailable.";
+            locationStatus.innerHTML = "Location not available.";
             break;
         case error.TIMEOUT:
-            locationStatus.innerHTML = "The request to get user location timed out.";
+            locationStatus.innerHTML = "Location request timed out.";
             break;
-        case error.UNKNOWN_ERROR:
-            locationStatus.innerHTML = "An unknown error occurred.";
+        default:
+            locationStatus.innerHTML = "Error getting location.";
             break;
     }
 }
@@ -145,7 +138,7 @@ if (crimeForm) {
     const description = document.getElementById("description").value;
     const location = document.getElementById("location").value;
     const datetime = document.getElementById("datetime").value;
-    const status = "Reported";
+    const status = "reported";
 
     try {
         const docRef = await addDoc(collection(db, "crimeReports"), {
@@ -161,6 +154,7 @@ if (crimeForm) {
             lat,
             lon
         });
+        console.log(status)
 
         emailjs.send("service_wm552h5", "template_5vdfkqp", { 
             crimeType: crimeType,

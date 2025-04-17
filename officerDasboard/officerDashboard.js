@@ -111,7 +111,7 @@ function createCaseCard(id, data) {
     caseItem.innerHTML = `
         <div class="case-header">
             <h3 class="case-title">${data.crimeType || "Unknown"}</h3>
-            <span class="case-status status-${(data.status || "pending").replace(' ', '-')}">${data.status || "Pending"}</span>
+            <span class="case-status status-${(data.status || "pending").replace(' ', '-')}">${data.status || "pending"}</span>
         </div>
         <p>${(data.description || "No description").substring(0, 100)}...</p>
         <div class="case-meta">
@@ -139,25 +139,26 @@ function addMarkerToMap(id, data) {
     markers.push(marker);
 }
 
-// Open Case Modal
+/// Open Case Modal
 async function openCaseModal(id, data) {
     currentCaseId = id;
     const caseDoc = await getDoc(doc(db, "crimeReports", id));
     const caseData = caseDoc.data();
+    console.log(caseData);
+    
 
-// Default images mapping
-const DEFAULT_IMAGES = {
-    'Theft': '../../asserts/Theft.jpg',
-    // 'Vandalism': '../../asserts/Vandalism.jpg',
-    'Assault': '../../asserts/Assault.jpeg',
-    'Fraud': '../../asserts/Fraud.jpeg',
-    'Other': '../../asserts/other.jpeg'
-};
+    // Default images mappincaseData.status
+    const DEFAULT_IMAGES = {
+        'Theft': '../../asserts/Theft.jpg',
+        // 'Vandalism': '../../asserts/Vandalism.jpg',
+        'Assault': '../../asserts/Assault.jpeg',
+        'Fraud': '../../asserts/Fraud.jpeg',
+        'Other': '../../asserts/other.jpeg'
+    };
 
-
-const imageHTML = caseData.image ? 
-`<img src="${caseData.image}" alt="Crime scene photo" height = "200px" width = "600px">` : 
-`<img src="${DEFAULT_IMAGES[caseData.crimeType] || DEFAULT_IMAGES['Other']}" alt="Default crime illustration" class="default-image"  height= "200px" width = "600px">`;
+    const imageHTML = caseData.image ? 
+    `<img src="${caseData.image}" alt="Crime scene photo" height = "200px" width = "600px">` : 
+    `<img src="${DEFAULT_IMAGES[caseData.crimeType] || DEFAULT_IMAGES['Other']}" alt="Default crime illustration" class="default-image"  height= "200px" width = "600px">`;
     
     modalCaseContent.innerHTML = `
         <div class="case-detail">
@@ -171,19 +172,23 @@ const imageHTML = caseData.image ?
         </div>
         ${imageHTML}
     `;
-    console.log(caseData.status)
-    statusUpdateSelect.value = caseData.status.toLowerCase().replace(' ', '');
+    console.log("Current status:", caseData.status);
+    
+    // Match the select value to the exact database value
+    statusUpdateSelect.value = caseData.status;
     caseModal.style.display = 'block';
 }
-
 // Update Case Status
 async function updateCaseStatus() {
     try {
+        // Get the exact status value without modifying it
+        const newStatus = statusUpdateSelect.value;
+        
         await updateDoc(doc(db, "crimeReports", currentCaseId), {
-            status: statusUpdateSelect.value.replace(' ', ''),
+            status: newStatus,
             updatedAt: serverTimestamp()
         });
-        console.log(statusUpdateSelect.value)
+        console.log("Updated status to:", newStatus);
         alert('Status updated successfully!');
         loadRecentCases();
         loadStats();
@@ -265,6 +270,7 @@ async function loadRecentFeedback() {
 
 // Load Statistics
 async function loadStats() {
+    // Use the exact case-sensitive values from your database
     const pendingQuery = query(collection(db, "crimeReports"), where("status", "==", "reported"));
     const progressQuery = query(collection(db, "crimeReports"), where("status", "==", "pending"));
     const resolvedQuery = query(collection(db, "crimeReports"), where("status", "==", "resolved"));
@@ -282,6 +288,7 @@ async function loadStats() {
     resolvedCount.textContent = resolvedSnap.size;
     feedbackCount.textContent = feedbackSnap.size;
 }
+
 
 // Initialize Charts
 function initCharts() {
